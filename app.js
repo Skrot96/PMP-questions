@@ -1,92 +1,162 @@
 const state = {
   rawQuestions: [],
   questions: [],
-  filteredQuestions: [],
-  currentSession: null,
-  currentIndex: 0,
-  answers: {},
-  flagged: new Set(),
-  reviewMode: false,
+  practicePool: [],
+  practiceSession: null,
+  examSession: null,
+  review: null,
   timerInterval: null,
-  examMode: false
+  breakShownAt: new Set(),
+  currentView: "home"
 };
 
-const DIFFICULTY_MAP = {
-  "lätt": "easy",
-  "medel": "medium",
-  "svår": "hard",
-  "easy": "easy",
-  "medium": "medium",
-  "hard": "hard"
-};
+const VIEW_IDS = ["home", "practice", "exam", "review", "about"];
 
 const els = {
-  totalQuestions: document.getElementById("totalQuestions"),
-  domainFilter: document.getElementById("domainFilter"),
-  taskFilter: document.getElementById("taskFilter"),
-  difficultyFilter: document.getElementById("difficultyFilter"),
-  typeFilter: document.getElementById("typeFilter"),
-  searchInput: document.getElementById("searchInput"),
-  questionCount: document.getElementById("questionCount"),
+  navButtons: Array.from(document.querySelectorAll(".nav-btn")),
+  views: Object.fromEntries(
+    VIEW_IDS.map((view) => [view, document.getElementById(`view-${view}`)])
+  ),
 
+  // Home
   startPracticeBtn: document.getElementById("startPracticeBtn"),
   startExamBtn: document.getElementById("startExamBtn"),
-  random20Btn: document.getElementById("random20Btn"),
-  resetFiltersBtn: document.getElementById("resetFiltersBtn"),
+  statsTotalQuestions: document.getElementById("statsTotalQuestions"),
+  recentResultSummary: document.getElementById("recentResultSummary"),
 
-  setupSection: document.getElementById("setupSection"),
-  quizSection: document.getElementById("quizSection"),
-  resultsSection: document.getElementById("resultsSection"),
+  // Practice filters
+  practiceDomain: document.getElementById("practiceDomain"),
+  practiceTask: document.getElementById("practiceTask"),
+  practiceDifficulty: document.getElementById("practiceDifficulty"),
+  practiceQuestionType: document.getElementById("practiceQuestionType"),
+  practiceTag: document.getElementById("practiceTag"),
+  practiceCount: document.getElementById("practiceCount"),
+  practiceGenerateBtn: document.getElementById("practiceGenerateBtn"),
+  practiceResetFiltersBtn: document.getElementById("practiceResetFiltersBtn"),
+  practicePoolInfo: document.getElementById("practicePoolInfo"),
 
-  sessionTitle: document.getElementById("sessionTitle"),
-  sessionMeta: document.getElementById("sessionMeta"),
-  timer: document.getElementById("timer"),
-  progressText: document.getElementById("progressText"),
-  progressBar: document.getElementById("progressBar"),
+  // Practice session
+  practiceSession: document.getElementById("practiceSession"),
+  practiceProgressText: document.getElementById("practiceProgressText"),
+  practiceProgressBar: document.getElementById("practiceProgressBar"),
+  practiceAnsweredCount: document.getElementById("practiceAnsweredCount"),
+  practiceUnansweredCount: document.getElementById("practiceUnansweredCount"),
+  practiceQuestionNav: document.getElementById("practiceQuestionNav"),
+  practiceFinishBtn: document.getElementById("practiceFinishBtn"),
+  practiceMetaDomain: document.getElementById("practiceMetaDomain"),
+  practiceMetaTask: document.getElementById("practiceMetaTask"),
+  practiceMetaType: document.getElementById("practiceMetaType"),
+  practiceMetaDifficulty: document.getElementById("practiceMetaDifficulty"),
+  practiceCaseBlock: document.getElementById("practiceCaseBlock"),
+  practiceCaseText: document.getElementById("practiceCaseText"),
+  practiceExhibitBlock: document.getElementById("practiceExhibitBlock"),
+  practiceExhibitContent: document.getElementById("practiceExhibitContent"),
+  practiceQuestionTitle: document.getElementById("practiceQuestionTitle"),
+  practiceQuestionInstruction: document.getElementById("practiceQuestionInstruction"),
+  practiceQuestionText: document.getElementById("practiceQuestionText"),
+  practiceOptions: document.getElementById("practiceOptions"),
+  practicePrevBtn: document.getElementById("practicePrevBtn"),
+  practiceMarkBtn: document.getElementById("practiceMarkBtn"),
+  practiceNextBtn: document.getElementById("practiceNextBtn"),
 
-  questionCard: document.getElementById("questionCard"),
-  questionText: document.getElementById("questionText"),
-  questionTags: document.getElementById("questionTags"),
-  answerOptions: document.getElementById("answerOptions"),
-  explanationBox: document.getElementById("explanationBox"),
+  // Exam setup
+  examShuffleQuestions: document.getElementById("examShuffleQuestions"),
+  examShuffleOptions: document.getElementById("examShuffleOptions"),
+  examEnableBreaks: document.getElementById("examEnableBreaks"),
+  examStartBtn: document.getElementById("examStartBtn"),
+  examSetup: document.getElementById("examSetup"),
 
-  prevBtn: document.getElementById("prevBtn"),
-  nextBtn: document.getElementById("nextBtn"),
-  flagBtn: document.getElementById("flagBtn"),
-  finishBtn: document.getElementById("finishBtn"),
+  // Exam session
+  examSession: document.getElementById("examSession"),
+  examTimer: document.getElementById("examTimer"),
+  examProgressText: document.getElementById("examProgressText"),
+  examProgressBar: document.getElementById("examProgressBar"),
+  examAnsweredCount: document.getElementById("examAnsweredCount"),
+  examMarkedCount: document.getElementById("examMarkedCount"),
+  examQuestionNav: document.getElementById("examQuestionNav"),
+  examFinishBtn: document.getElementById("examFinishBtn"),
+  examBreakNotice: document.getElementById("examBreakNotice"),
+  examBreakText: document.getElementById("examBreakText"),
+  examContinueAfterBreakBtn: document.getElementById("examContinueAfterBreakBtn"),
+  examMetaDomain: document.getElementById("examMetaDomain"),
+  examMetaTask: document.getElementById("examMetaTask"),
+  examMetaType: document.getElementById("examMetaType"),
+  examMetaDifficulty: document.getElementById("examMetaDifficulty"),
+  examCaseBlock: document.getElementById("examCaseBlock"),
+  examCaseText: document.getElementById("examCaseText"),
+  examExhibitBlock: document.getElementById("examExhibitBlock"),
+  examExhibitContent: document.getElementById("examExhibitContent"),
+  examQuestionTitle: document.getElementById("examQuestionTitle"),
+  examQuestionInstruction: document.getElementById("examQuestionInstruction"),
+  examQuestionText: document.getElementById("examQuestionText"),
+  examOptions: document.getElementById("examOptions"),
+  examPrevBtn: document.getElementById("examPrevBtn"),
+  examMarkBtn: document.getElementById("examMarkBtn"),
+  examNextBtn: document.getElementById("examNextBtn"),
 
-  resultsSummary: document.getElementById("resultsSummary"),
-  resultsDetails: document.getElementById("resultsDetails"),
-  restartBtn: document.getElementById("restartBtn")
+  // Review
+  reviewEmpty: document.getElementById("reviewEmpty"),
+  reviewContent: document.getElementById("reviewContent"),
+  reviewScorePercent: document.getElementById("reviewScorePercent"),
+  reviewCorrectCount: document.getElementById("reviewCorrectCount"),
+  reviewIncorrectCount: document.getElementById("reviewIncorrectCount"),
+  reviewMode: document.getElementById("reviewMode"),
+  reviewDomainBreakdown: document.getElementById("reviewDomainBreakdown"),
+  reviewFilterStatus: document.getElementById("reviewFilterStatus"),
+  reviewFilterDomain: document.getElementById("reviewFilterDomain"),
+  reviewQuestions: document.getElementById("reviewQuestions"),
+  reviewItemTemplate: document.getElementById("reviewItemTemplate")
 };
 
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   bindEvents();
+  restoreRecentResult();
   await loadQuestions();
-  buildFilters();
-  applyFilters();
-  renderSetupStats();
+  buildPracticeFilters();
+  updateHomeStats();
+  updatePracticePoolInfo();
+  renderRecentResultSummary();
+  renderReview();
 }
 
 function bindEvents() {
-  els.domainFilter?.addEventListener("change", onDomainChange);
-  els.taskFilter?.addEventListener("change", applyFilters);
-  els.difficultyFilter?.addEventListener("change", applyFilters);
-  els.typeFilter?.addEventListener("change", applyFilters);
-  els.searchInput?.addEventListener("input", applyFilters);
+  els.navButtons.forEach((btn) => {
+    btn.addEventListener("click", () => switchView(btn.dataset.view));
+  });
 
-  els.startPracticeBtn?.addEventListener("click", () => startPracticeSession());
-  els.startExamBtn?.addEventListener("click", () => startExamSession());
-  els.random20Btn?.addEventListener("click", () => startPracticeSession(20));
-  els.resetFiltersBtn?.addEventListener("click", resetFilters);
+  els.startPracticeBtn?.addEventListener("click", () => switchView("practice"));
+  els.startExamBtn?.addEventListener("click", () => {
+    switchView("exam");
+    if (!state.examSession) {
+      scrollToTop();
+    }
+  });
 
-  els.prevBtn?.addEventListener("click", prevQuestion);
-  els.nextBtn?.addEventListener("click", nextQuestion);
-  els.flagBtn?.addEventListener("click", toggleFlag);
-  els.finishBtn?.addEventListener("click", finishSession);
-  els.restartBtn?.addEventListener("click", restartApp);
+  els.practiceDomain?.addEventListener("change", handlePracticeDomainChange);
+  els.practiceTask?.addEventListener("change", updatePracticePoolInfo);
+  els.practiceDifficulty?.addEventListener("change", updatePracticePoolInfo);
+  els.practiceQuestionType?.addEventListener("change", updatePracticePoolInfo);
+  els.practiceTag?.addEventListener("change", updatePracticePoolInfo);
+
+  els.practiceGenerateBtn?.addEventListener("click", startPracticeSession);
+  els.practiceResetFiltersBtn?.addEventListener("click", resetPracticeFilters);
+
+  els.practicePrevBtn?.addEventListener("click", () => movePractice(-1));
+  els.practiceNextBtn?.addEventListener("click", () => movePractice(1));
+  els.practiceMarkBtn?.addEventListener("click", togglePracticeMark);
+  els.practiceFinishBtn?.addEventListener("click", finishPracticeSession);
+
+  els.examStartBtn?.addEventListener("click", startExamSession);
+  els.examPrevBtn?.addEventListener("click", () => moveExam(-1));
+  els.examNextBtn?.addEventListener("click", () => moveExam(1));
+  els.examMarkBtn?.addEventListener("click", toggleExamMark);
+  els.examFinishBtn?.addEventListener("click", finishExamSession);
+  els.examContinueAfterBreakBtn?.addEventListener("click", continueAfterBreak);
+
+  els.reviewFilterStatus?.addEventListener("change", renderReviewQuestions);
+  els.reviewFilterDomain?.addEventListener("change", renderReviewQuestions);
 }
 
 async function loadQuestions() {
@@ -106,14 +176,14 @@ async function loadQuestions() {
       }
       loaded = data;
       break;
-    } catch (err) {
-      lastError = err;
+    } catch (error) {
+      lastError = error;
     }
   }
 
   if (!loaded) {
     console.error(lastError);
-    alert("Kunde inte läsa frågebanken. Kontrollera att questions.json finns i samma mapp som index.html eller i data/questions.json.");
+    alert("Kunde inte läsa frågebanken. Kontrollera att questions.json finns i data/questions.json eller i samma mapp som index.html.");
     return;
   }
 
@@ -121,49 +191,75 @@ async function loadQuestions() {
   state.questions = loaded.map(normalizeQuestion).filter(Boolean);
 }
 
-function normalizeQuestion(q, idx) {
+function normalizeQuestion(q, index) {
   if (!q || typeof q !== "object") return null;
 
   const options = normalizeOptions(q.options || []);
-  const correctAnswers = normalizeCorrectAnswers(q.correctAnswers || [], options);
+  const normalizedType = normalizeQuestionType(q.type, options);
+  const normalizedOptions =
+    (normalizedType === "case" || normalizedType === "exhibit") && options.length === 0
+      ? []
+      : options;
+
+  const correctAnswers = normalizeCorrectAnswers(q.correctAnswers || [], normalizedOptions);
 
   return {
-    id: q.id || `Q-${idx + 1}`,
+    id: q.id || `Q-${index + 1}`,
     domain: q.domain || "Okänd",
     taskCode: q.taskCode || "",
     task: q.task || "",
     tags: Array.isArray(q.tags) ? q.tags : [],
     difficulty: normalizeDifficulty(q.difficulty),
-    difficultyLabel: q.difficulty || "",
-    type: q.type === "multiple" ? "multiple" : "single",
+    difficultyLabel: q.difficulty || difficultyLabelFromValue(normalizeDifficulty(q.difficulty)),
+    type: normalizedType,
     question: q.question || "",
-    options,
+    options: normalizedOptions,
     correctAnswers,
-    explanation: q.explanation || ""
+    explanation: q.explanation || "",
+    caseText: q.caseText || q.case || "",
+    exhibitContent: q.exhibitContent || q.exhibit || ""
   };
 }
 
+function normalizeQuestionType(type, options) {
+  const t = String(type || "").trim().toLowerCase();
+  if (t === "multiple") return "multiple";
+  if (t === "case") return "case";
+  if (t === "exhibit") return "exhibit";
+  if (t === "single") return "single";
+  return options.length > 1 ? "single" : "single";
+}
+
 function normalizeDifficulty(value) {
+  const map = {
+    "lätt": "easy",
+    "medel": "medium",
+    "svår": "hard",
+    "easy": "easy",
+    "medium": "medium",
+    "hard": "hard"
+  };
   const key = String(value || "").trim().toLowerCase();
-  return DIFFICULTY_MAP[key] || "medium";
+  return map[key] || "medium";
+}
+
+function difficultyLabelFromValue(value) {
+  if (value === "easy") return "Lätt";
+  if (value === "hard") return "Svår";
+  return "Medel";
 }
 
 function normalizeOptions(options) {
   return options.map((opt, index) => {
     if (typeof opt === "string") {
-      return {
-        id: optionIdFromIndex(index),
-        text: opt
-      };
+      return { id: optionIdFromIndex(index), text: opt };
     }
-
     if (opt && typeof opt === "object") {
       return {
         id: opt.id || optionIdFromIndex(index),
         text: opt.text || opt.label || String(opt)
       };
     }
-
     return {
       id: optionIdFromIndex(index),
       text: String(opt)
@@ -173,25 +269,21 @@ function normalizeOptions(options) {
 
 function normalizeCorrectAnswers(correctAnswers, options) {
   return correctAnswers
-    .map((ans) => {
-      if (typeof ans === "number") {
-        return options[ans]?.id || null;
+    .map((answer) => {
+      if (typeof answer === "number") {
+        return options[answer]?.id || null;
       }
 
-      if (typeof ans === "string") {
-        const trimmed = ans.trim();
-
-        if (/^\d+$/.test(trimmed)) {
-          const numericIndex = Number(trimmed);
-          return options[numericIndex]?.id || null;
-        }
-
-        const byId = options.find((o) => o.id === trimmed);
-        if (byId) return byId.id;
-
-        const byText = options.find((o) => o.text === trimmed);
-        if (byText) return byText.id;
+      const str = String(answer || "").trim();
+      if (/^\d+$/.test(str)) {
+        return options[Number(str)]?.id || null;
       }
+
+      const byId = options.find((o) => o.id === str);
+      if (byId) return byId.id;
+
+      const byText = options.find((o) => o.text === str);
+      if (byText) return byText.id;
 
       return null;
     })
@@ -203,72 +295,61 @@ function optionIdFromIndex(index) {
   return String.fromCharCode(65 + index);
 }
 
-function buildFilters() {
-  populateSelect(
-    els.domainFilter,
-    uniqueSorted(state.questions.map((q) => q.domain)),
-    "Alla domäner"
-  );
+function switchView(viewName) {
+  if (!VIEW_IDS.includes(viewName)) return;
+  state.currentView = viewName;
 
-  populateSelect(
-    els.difficultyFilter,
-    [
-      { value: "", label: "Alla svårighetsgrader" },
-      { value: "easy", label: "Lätt" },
-      { value: "medium", label: "Medel" },
-      { value: "hard", label: "Svår" }
-    ],
-    null,
-    true
-  );
+  els.navButtons.forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.view === viewName);
+  });
 
-  populateSelect(
-    els.typeFilter,
-    [
-      { value: "", label: "Alla frågetyper" },
-      { value: "single", label: "Ett svar" },
-      { value: "multiple", label: "Flera svar" }
-    ],
-    null,
-    true
-  );
+  VIEW_IDS.forEach((view) => {
+    els.views[view]?.classList.toggle("active", view === viewName);
+  });
 
-  onDomainChange();
+  scrollToTop();
 }
 
-function onDomainChange() {
-  const selectedDomain = els.domainFilter?.value || "";
+function updateHomeStats() {
+  if (els.statsTotalQuestions) {
+    els.statsTotalQuestions.textContent = String(state.questions.length);
+  }
+}
+
+function buildPracticeFilters() {
+  populateSelect(els.practiceDomain, uniqueSorted(state.questions.map((q) => q.domain)), "Alla domäner");
+  populateSelect(els.practiceTag, uniqueSorted(state.questions.flatMap((q) => q.tags || [])), "Alla taggar");
+  handlePracticeDomainChange();
+  populateReviewDomainFilter();
+}
+
+function handlePracticeDomainChange() {
+  const domain = els.practiceDomain?.value || "";
   const tasks = uniqueSorted(
     state.questions
-      .filter((q) => !selectedDomain || q.domain === selectedDomain)
-      .map((q) => `${q.taskCode} — ${q.task}`)
+      .filter((q) => !domain || q.domain === domain)
+      .map((q) => formatTaskLabel(q))
   );
-
-  populateSelect(els.taskFilter, tasks, "Alla tasks");
-  applyFilters();
+  populateSelect(els.practiceTask, tasks, "Alla tasks");
+  updatePracticePoolInfo();
 }
 
-function populateSelect(selectEl, items, defaultLabel, itemsAreObjects = false) {
+function populateReviewDomainFilter() {
+  populateSelect(els.reviewFilterDomain, uniqueSorted(state.questions.map((q) => q.domain)), "Alla domäner");
+}
+
+function populateSelect(selectEl, values, defaultLabel) {
   if (!selectEl) return;
-
   selectEl.innerHTML = "";
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = defaultLabel;
+  selectEl.appendChild(defaultOption);
 
-  if (defaultLabel !== null) {
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.textContent = defaultLabel;
-    selectEl.appendChild(defaultOption);
-  }
-
-  items.forEach((item) => {
+  values.forEach((value) => {
     const option = document.createElement("option");
-    if (itemsAreObjects) {
-      option.value = item.value;
-      option.textContent = item.label;
-    } else {
-      option.value = item;
-      option.textContent = item;
-    }
+    option.value = value;
+    option.textContent = value;
     selectEl.appendChild(option);
   });
 }
@@ -279,328 +360,470 @@ function uniqueSorted(values) {
   );
 }
 
-function applyFilters() {
-  const domain = els.domainFilter?.value || "";
-  const task = els.taskFilter?.value || "";
-  const difficulty = els.difficultyFilter?.value || "";
-  const type = els.typeFilter?.value || "";
-  const search = (els.searchInput?.value || "").trim().toLowerCase();
+function formatTaskLabel(question) {
+  return question.taskCode ? `${question.taskCode} — ${question.task}` : question.task;
+}
 
-  state.filteredQuestions = state.questions.filter((q) => {
-    const taskLabel = `${q.taskCode} — ${q.task}`;
+function getPracticeFilteredQuestions() {
+  const domain = els.practiceDomain?.value || "";
+  const task = els.practiceTask?.value || "";
+  const difficulty = els.practiceDifficulty?.value || "";
+  const type = els.practiceQuestionType?.value || "";
+  const tag = els.practiceTag?.value || "";
 
+  return state.questions.filter((q) => {
     const matchesDomain = !domain || q.domain === domain;
-    const matchesTask = !task || taskLabel === task;
+    const matchesTask = !task || formatTaskLabel(q) === task;
     const matchesDifficulty = !difficulty || q.difficulty === difficulty;
     const matchesType = !type || q.type === type;
-
-    const haystack = [
-      q.id,
-      q.domain,
-      q.taskCode,
-      q.task,
-      q.question,
-      q.explanation,
-      ...(q.tags || []),
-      ...(q.options || []).map((o) => o.text)
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    const matchesSearch = !search || haystack.includes(search);
-
-    return matchesDomain && matchesTask && matchesDifficulty && matchesType && matchesSearch;
+    const matchesTag = !tag || (q.tags || []).includes(tag);
+    return matchesDomain && matchesTask && matchesDifficulty && matchesType && matchesTag;
   });
-
-  renderSetupStats();
 }
 
-function renderSetupStats() {
-  if (els.totalQuestions) els.totalQuestions.textContent = String(state.questions.length);
-  if (els.questionCount) els.questionCount.textContent = String(state.filteredQuestions.length);
+function updatePracticePoolInfo() {
+  const filtered = getPracticeFilteredQuestions();
+  state.practicePool = filtered;
+  if (!els.practicePoolInfo) return;
+
+  if (!filtered.length) {
+    els.practicePoolInfo.textContent = "Inga frågor matchar nuvarande filter.";
+    return;
+  }
+
+  const count = Number(els.practiceCount?.value || 20);
+  els.practicePoolInfo.textContent = `${filtered.length} frågor matchar filtren. Passet kommer att använda upp till ${Math.min(count, filtered.length)} frågor.`;
 }
 
-function resetFilters() {
-  if (els.domainFilter) els.domainFilter.value = "";
-  onDomainChange();
-  if (els.taskFilter) els.taskFilter.value = "";
-  if (els.difficultyFilter) els.difficultyFilter.value = "";
-  if (els.typeFilter) els.typeFilter.value = "";
-  if (els.searchInput) els.searchInput.value = "";
-  applyFilters();
+function resetPracticeFilters() {
+  if (els.practiceDomain) els.practiceDomain.value = "";
+  handlePracticeDomainChange();
+  if (els.practiceTask) els.practiceTask.value = "";
+  if (els.practiceDifficulty) els.practiceDifficulty.value = "";
+  if (els.practiceQuestionType) els.practiceQuestionType.value = "";
+  if (els.practiceTag) els.practiceTag.value = "";
+  if (els.practiceCount) els.practiceCount.value = "20";
+  updatePracticePoolInfo();
 }
 
-function startPracticeSession(limit = null) {
-  const pool = [...state.filteredQuestions];
+function startPracticeSession() {
+  const pool = shuffle([...state.practicePool]);
   if (!pool.length) {
     alert("Det finns inga frågor som matchar filtren.");
     return;
   }
 
-  let selected = shuffle(pool);
-  if (limit) selected = selected.slice(0, Math.min(limit, selected.length));
+  const count = Math.min(Number(els.practiceCount?.value || 20), pool.length);
+  const selected = pool.slice(0, count);
 
-  startSession({
-    title: limit ? `Övningspass (${selected.length} frågor)` : `Övningspass (${selected.length} frågor)`,
+  state.practiceSession = createSession({
+    mode: "Övningsläge",
     questions: selected,
-    examMode: false,
-    totalSeconds: null
+    totalSeconds: null,
+    shuffleOptions: false
   });
+
+  els.practiceSession?.classList.remove("hidden");
+  renderPractice();
+}
+
+function createSession({ mode, questions, totalSeconds, shuffleOptions }) {
+  const normalizedQuestions = questions.map((q) => {
+    const clone = {
+      ...q,
+      options: q.options.map((o) => ({ ...o })),
+      correctAnswers: [...q.correctAnswers]
+    };
+
+    if (shuffleOptions && clone.options.length > 1) {
+      const originalById = new Map(clone.options.map((o) => [o.id, o]));
+      clone.options = shuffle([...clone.options]);
+      clone.correctAnswers = clone.correctAnswers.filter((id) => originalById.has(id)).sort();
+    }
+
+    return clone;
+  });
+
+  return {
+    mode,
+    questions: normalizedQuestions,
+    currentIndex: 0,
+    answers: {},
+    marked: new Set(),
+    totalSeconds,
+    remainingSeconds: totalSeconds,
+    completed: false
+  };
+}
+
+function renderPractice() {
+  const session = state.practiceSession;
+  if (!session) return;
+
+  const question = session.questions[session.currentIndex];
+  const answeredCount = getAnsweredCount(session);
+  const total = session.questions.length;
+
+  setText(els.practiceProgressText, `Fråga ${session.currentIndex + 1} av ${total}`);
+  setWidth(els.practiceProgressBar, ((session.currentIndex + 1) / total) * 100);
+  setText(els.practiceAnsweredCount, String(answeredCount));
+  setText(els.practiceUnansweredCount, String(total - answeredCount));
+
+  setText(els.practiceMetaDomain, question.domain);
+  setText(els.practiceMetaTask, formatTaskLabel(question));
+  setText(els.practiceMetaType, questionTypeLabel(question.type));
+  setText(els.practiceMetaDifficulty, question.difficultyLabel);
+
+  renderCaseAndExhibit(
+    question,
+    els.practiceCaseBlock,
+    els.practiceCaseText,
+    els.practiceExhibitBlock,
+    els.practiceExhibitContent
+  );
+
+  setText(els.practiceQuestionTitle, `Fråga ${session.currentIndex + 1}`);
+  setText(els.practiceQuestionInstruction, instructionText(question.type));
+  setHtml(els.practiceQuestionText, escapeHtml(question.question).replace(/\n/g, "<br>"));
+
+  renderOptions({
+    container: els.practiceOptions,
+    question,
+    selectedAnswers: session.answers[question.id] || [],
+    disabled: false,
+    onChange: (value, checked) => updateSessionAnswer(session, question, value, checked)
+  });
+
+  renderQuestionNav({
+    container: els.practiceQuestionNav,
+    session,
+    onClick: (index) => {
+      session.currentIndex = index;
+      renderPractice();
+    }
+  });
+
+  updateButtonState(els.practicePrevBtn, session.currentIndex === 0);
+  updateButtonState(els.practiceNextBtn, session.currentIndex === total - 1);
+  if (els.practiceMarkBtn) {
+    els.practiceMarkBtn.textContent = session.marked.has(question.id) ? "Avmarkera" : "Markera";
+  }
+}
+
+function movePractice(direction) {
+  const session = state.practiceSession;
+  if (!session) return;
+  const nextIndex = session.currentIndex + direction;
+  if (nextIndex < 0 || nextIndex >= session.questions.length) return;
+  session.currentIndex = nextIndex;
+  renderPractice();
+}
+
+function togglePracticeMark() {
+  const session = state.practiceSession;
+  if (!session) return;
+  const q = session.questions[session.currentIndex];
+  toggleMarked(session, q.id);
+  renderPractice();
+}
+
+function finishPracticeSession() {
+  const session = state.practiceSession;
+  if (!session) return;
+  const result = buildResult(session);
+  saveResult(result);
+  renderReview();
+  switchView("review");
 }
 
 function startExamSession() {
-  let selected = smartPickQuestions(state.filteredQuestions.length ? state.filteredQuestions : state.questions, 180);
-
-  if (selected.length < 180) {
-    alert(`Frågebanken innehåller bara ${selected.length} tillgängliga frågor för provet.`);
+  const source = [...state.questions];
+  if (!source.length) {
+    alert("Frågebanken är tom.");
+    return;
   }
 
-  startSession({
-    title: "Simulerad PMP-examen",
-    questions: selected,
-    examMode: true,
-    totalSeconds: 230 * 60
+  const selected = buildExamQuestionSet(source, 180);
+  const shuffleQuestions = !!els.examShuffleQuestions?.checked;
+  const shuffleOptions = !!els.examShuffleOptions?.checked;
+
+  const questions = shuffleQuestions ? shuffle(selected) : selected;
+
+  state.examSession = createSession({
+    mode: "Simulerat prov",
+    questions,
+    totalSeconds: 230 * 60,
+    shuffleOptions
   });
+
+  state.breakShownAt = new Set();
+
+  els.examSetup?.classList.add("hidden");
+  els.examSession?.classList.remove("hidden");
+  els.examBreakNotice?.classList.add("hidden");
+
+  startExamTimer();
+  renderExam();
 }
 
-function smartPickQuestions(source, targetCount) {
+function buildExamQuestionSet(source, count) {
   const shuffled = shuffle([...source]);
-  if (shuffled.length <= targetCount) return shuffled;
+  if (shuffled.length <= count) return shuffled;
 
-  const buckets = {
-    easy: shuffled.filter((q) => q.difficulty === "easy"),
-    medium: shuffled.filter((q) => q.difficulty === "medium"),
-    hard: shuffled.filter((q) => q.difficulty === "hard")
+  const target = {
+    people: Math.round(count * 0.33),
+    process: Math.round(count * 0.41),
+    business: count - Math.round(count * 0.33) - Math.round(count * 0.41)
   };
 
-  const targets = {
-    easy: Math.round(targetCount * 0.2),
-    medium: Math.round(targetCount * 0.5),
-    hard: targetCount - Math.round(targetCount * 0.2) - Math.round(targetCount * 0.5)
+  const buckets = {
+    people: shuffled.filter((q) => q.domain.toLowerCase() === "people"),
+    process: shuffled.filter((q) => q.domain.toLowerCase() === "process"),
+    business: shuffled.filter((q) => q.domain.toLowerCase().includes("business"))
   };
 
   let result = [];
-  for (const level of ["easy", "medium", "hard"]) {
-    result = result.concat(shuffle(buckets[level]).slice(0, targets[level]));
+  result = result.concat(shuffle(buckets.people).slice(0, target.people));
+  result = result.concat(shuffle(buckets.process).slice(0, target.process));
+  result = result.concat(shuffle(buckets.business).slice(0, target.business));
+
+  if (result.length < count) {
+    const used = new Set(result.map((q) => q.id));
+    const fillers = shuffled.filter((q) => !used.has(q.id));
+    result = result.concat(fillers.slice(0, count - result.length));
   }
 
-  if (result.length < targetCount) {
-    const usedIds = new Set(result.map((q) => q.id));
-    const fillers = shuffled.filter((q) => !usedIds.has(q.id));
-    result = result.concat(fillers.slice(0, targetCount - result.length));
-  }
-
-  return shuffle(result).slice(0, targetCount);
+  return shuffle(result).slice(0, count);
 }
 
-function startSession({ title, questions, examMode, totalSeconds }) {
-  state.currentSession = {
-    title,
-    questions,
-    totalSeconds,
-    remainingSeconds: totalSeconds
-  };
-  state.currentIndex = 0;
-  state.answers = {};
-  state.flagged = new Set();
-  state.reviewMode = false;
-  state.examMode = examMode;
+function startExamTimer() {
+  clearExamTimer();
+  renderExamTimer();
 
-  if (els.setupSection) els.setupSection.hidden = true;
-  if (els.resultsSection) els.resultsSection.hidden = true;
-  if (els.quizSection) els.quizSection.hidden = false;
-
-  if (els.sessionTitle) els.sessionTitle.textContent = title;
-  if (els.sessionMeta) {
-    els.sessionMeta.textContent = examMode
-      ? `${questions.length} frågor • 230 minuter`
-      : `${questions.length} frågor`;
-  }
-
-  clearTimer();
-  if (examMode && totalSeconds) startTimer();
-
-  renderQuestion();
-}
-
-function startTimer() {
-  updateTimerDisplay();
   state.timerInterval = setInterval(() => {
-    if (!state.currentSession) return;
-    state.currentSession.remainingSeconds -= 1;
-    updateTimerDisplay();
+    if (!state.examSession || state.examSession.completed) return;
+    state.examSession.remainingSeconds -= 1;
+    renderExamTimer();
 
-    if (state.currentSession.remainingSeconds <= 0) {
-      clearTimer();
-      finishSession();
+    if (state.examSession.remainingSeconds <= 0) {
+      clearExamTimer();
+      finishExamSession();
     }
   }, 1000);
 }
 
-function clearTimer() {
+function clearExamTimer() {
   if (state.timerInterval) {
     clearInterval(state.timerInterval);
     state.timerInterval = null;
   }
 }
 
-function updateTimerDisplay() {
-  if (!els.timer) return;
-  const sec = state.currentSession?.remainingSeconds;
-  if (sec == null) {
-    els.timer.textContent = "";
-    return;
-  }
+function renderExamTimer() {
+  if (!els.examTimer || !state.examSession) return;
+  const sec = Math.max(0, state.examSession.remainingSeconds);
   const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);
   const s = sec % 60;
-  els.timer.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+  els.examTimer.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
 }
 
-function pad(n) {
-  return String(n).padStart(2, "0");
-}
+function renderExam() {
+  const session = state.examSession;
+  if (!session) return;
 
-function renderQuestion() {
-  const q = getCurrentQuestion();
-  if (!q) return;
+  maybeShowBreakNotice(session);
 
-  const total = state.currentSession.questions.length;
-  const current = state.currentIndex + 1;
+  const question = session.questions[session.currentIndex];
+  const answeredCount = getAnsweredCount(session);
+  const total = session.questions.length;
 
-  if (els.progressText) els.progressText.textContent = `Fråga ${current} av ${total}`;
-  if (els.progressBar) els.progressBar.style.width = `${(current / total) * 100}%`;
+  setText(els.examProgressText, `Fråga ${session.currentIndex + 1} av ${total}`);
+  setWidth(els.examProgressBar, ((session.currentIndex + 1) / total) * 100);
+  setText(els.examAnsweredCount, String(answeredCount));
+  setText(els.examMarkedCount, String(session.marked.size));
 
-  if (els.questionText) els.questionText.textContent = q.question;
+  setText(els.examMetaDomain, question.domain);
+  setText(els.examMetaTask, formatTaskLabel(question));
+  setText(els.examMetaType, questionTypeLabel(question.type));
+  setText(els.examMetaDifficulty, question.difficultyLabel);
 
-  if (els.questionTags) {
-    const meta = [
-      q.domain,
-      q.taskCode ? `${q.taskCode}` : "",
-      q.task,
-      q.difficultyLabel || q.difficulty,
-      q.type === "multiple" ? "Flera svar" : "Ett svar"
-    ].filter(Boolean);
-    els.questionTags.textContent = meta.join(" • ");
-  }
+  renderCaseAndExhibit(
+    question,
+    els.examCaseBlock,
+    els.examCaseText,
+    els.examExhibitBlock,
+    els.examExhibitContent
+  );
 
-  if (els.answerOptions) {
-    els.answerOptions.innerHTML = "";
-    const saved = state.answers[q.id] || [];
+  setText(els.examQuestionTitle, `Fråga ${session.currentIndex + 1}`);
+  setText(els.examQuestionInstruction, instructionText(question.type));
+  setHtml(els.examQuestionText, escapeHtml(question.question).replace(/\n/g, "<br>"));
 
-    q.options.forEach((opt) => {
-      const wrapper = document.createElement("label");
-      wrapper.className = "answer-option";
+  renderOptions({
+    container: els.examOptions,
+    question,
+    selectedAnswers: session.answers[question.id] || [],
+    disabled: false,
+    onChange: (value, checked) => updateSessionAnswer(session, question, value, checked)
+  });
 
-      const input = document.createElement("input");
-      input.type = q.type === "multiple" ? "checkbox" : "radio";
-      input.name = `question-${q.id}`;
-      input.value = opt.id;
-      input.checked = saved.includes(opt.id);
-      input.disabled = state.reviewMode;
-      input.addEventListener("change", () => handleAnswerChange(q, opt.id, input.checked));
-
-      const text = document.createElement("span");
-      text.textContent = `${opt.id}. ${opt.text}`;
-
-      wrapper.appendChild(input);
-      wrapper.appendChild(text);
-
-      if (state.reviewMode) {
-        const correct = q.correctAnswers.includes(opt.id);
-        const chosen = saved.includes(opt.id);
-        if (correct) wrapper.classList.add("is-correct");
-        if (chosen && !correct) wrapper.classList.add("is-wrong");
-      }
-
-      els.answerOptions.appendChild(wrapper);
-    });
-  }
-
-  if (els.explanationBox) {
-    if (state.reviewMode) {
-      const user = (state.answers[q.id] || []).slice().sort();
-      const correct = q.correctAnswers.slice().sort();
-      const isCorrect = arraysEqual(user, correct);
-
-      els.explanationBox.hidden = false;
-      els.explanationBox.innerHTML = `
-        <div><strong>Resultat:</strong> ${isCorrect ? "Rätt" : "Fel"}</div>
-        <div><strong>Rätt svar:</strong> ${correct.join(", ")}</div>
-        <div><strong>Din markering:</strong> ${user.length ? user.join(", ") : "Inget svar"}</div>
-        <div style="margin-top:8px;"><strong>Förklaring:</strong> ${escapeHtml(q.explanation || "")}</div>
-      `;
-    } else {
-      els.explanationBox.hidden = true;
-      els.explanationBox.innerHTML = "";
+  renderQuestionNav({
+    container: els.examQuestionNav,
+    session,
+    onClick: (index) => {
+      session.currentIndex = index;
+      renderExam();
     }
-  }
+  });
 
-  if (els.prevBtn) els.prevBtn.disabled = state.currentIndex === 0;
-  if (els.nextBtn) els.nextBtn.disabled = state.currentIndex >= total - 1;
-  if (els.flagBtn) els.flagBtn.textContent = state.flagged.has(q.id) ? "Avmarkera flagga" : "Flagga";
+  updateButtonState(els.examPrevBtn, session.currentIndex === 0);
+  updateButtonState(els.examNextBtn, session.currentIndex === total - 1);
+  if (els.examMarkBtn) {
+    els.examMarkBtn.textContent = session.marked.has(question.id) ? "Avmarkera" : "Markera";
+  }
 }
 
-function handleAnswerChange(question, optionId, checked) {
-  let current = state.answers[question.id] || [];
+function maybeShowBreakNotice(session) {
+  const breaksEnabled = !!els.examEnableBreaks?.checked;
+  if (!breaksEnabled) {
+    els.examBreakNotice?.classList.add("hidden");
+    return;
+  }
 
-  if (question.type === "single") {
-    current = checked ? [optionId] : [];
+  const currentHumanIndex = session.currentIndex + 1;
+  const breakPoints = [61, 121];
+
+  if (breakPoints.includes(currentHumanIndex) && !state.breakShownAt.has(currentHumanIndex)) {
+    state.breakShownAt.add(currentHumanIndex);
+    if (els.examBreakText) {
+      const previousBlockEnd = currentHumanIndex - 1;
+      els.examBreakText.textContent = `Du har nu passerat fråga ${previousBlockEnd}. Det här är en rekommenderad paus innan du fortsätter.`;
+    }
+    els.examBreakNotice?.classList.remove("hidden");
+  }
+}
+
+function continueAfterBreak() {
+  els.examBreakNotice?.classList.add("hidden");
+}
+
+function moveExam(direction) {
+  const session = state.examSession;
+  if (!session) return;
+  const nextIndex = session.currentIndex + direction;
+  if (nextIndex < 0 || nextIndex >= session.questions.length) return;
+  session.currentIndex = nextIndex;
+  renderExam();
+}
+
+function toggleExamMark() {
+  const session = state.examSession;
+  if (!session) return;
+  const q = session.questions[session.currentIndex];
+  toggleMarked(session, q.id);
+  renderExam();
+}
+
+function finishExamSession() {
+  const session = state.examSession;
+  if (!session) return;
+  clearExamTimer();
+  const result = buildResult(session);
+  saveResult(result);
+  renderReview();
+  switchView("review");
+}
+
+function updateSessionAnswer(session, question, value, checked) {
+  let answers = session.answers[question.id] || [];
+
+  if (question.type === "multiple") {
+    const set = new Set(answers);
+    if (checked) set.add(value);
+    else set.delete(value);
+    answers = [...set].sort();
   } else {
-    const set = new Set(current);
-    if (checked) set.add(optionId);
-    else set.delete(optionId);
-    current = [...set].sort();
+    answers = checked ? [value] : [];
   }
 
-  state.answers[question.id] = current;
-}
-
-function getCurrentQuestion() {
-  return state.currentSession?.questions?.[state.currentIndex] || null;
-}
-
-function prevQuestion() {
-  if (state.currentIndex > 0) {
-    state.currentIndex -= 1;
-    renderQuestion();
+  session.answers[question.id] = answers;
+  if (session === state.practiceSession) {
+    renderPractice();
+  } else if (session === state.examSession) {
+    renderExam();
   }
 }
 
-function nextQuestion() {
-  if (state.currentIndex < state.currentSession.questions.length - 1) {
-    state.currentIndex += 1;
-    renderQuestion();
-  }
+function toggleMarked(session, questionId) {
+  if (session.marked.has(questionId)) session.marked.delete(questionId);
+  else session.marked.add(questionId);
 }
 
-function toggleFlag() {
-  const q = getCurrentQuestion();
-  if (!q) return;
-  if (state.flagged.has(q.id)) state.flagged.delete(q.id);
-  else state.flagged.add(q.id);
-  renderQuestion();
+function renderOptions({ container, question, selectedAnswers, disabled, onChange }) {
+  if (!container) return;
+  container.innerHTML = "";
+
+  question.options.forEach((option) => {
+    const label = document.createElement("label");
+    label.className = "option-item";
+
+    const input = document.createElement("input");
+    input.type = question.type === "multiple" ? "checkbox" : "radio";
+    input.name = `question-${question.id}`;
+    input.value = option.id;
+    input.checked = selectedAnswers.includes(option.id);
+    input.disabled = disabled;
+    input.addEventListener("change", () => onChange(option.id, input.checked));
+
+    const bubble = document.createElement("span");
+    bubble.className = "option-badge";
+    bubble.textContent = option.id;
+
+    const text = document.createElement("span");
+    text.className = "option-text";
+    text.textContent = option.text;
+
+    label.appendChild(input);
+    label.appendChild(bubble);
+    label.appendChild(text);
+
+    container.appendChild(label);
+  });
 }
 
-function finishSession() {
-  clearTimer();
-  state.reviewMode = true;
+function renderQuestionNav({ container, session, onClick }) {
+  if (!container) return;
+  container.innerHTML = "";
 
-  const results = calculateResults();
+  session.questions.forEach((question, index) => {
+    const btn = document.createElement("button");
+    btn.className = "question-nav-btn";
+    btn.textContent = String(index + 1);
 
-  if (els.quizSection) els.quizSection.hidden = true;
-  if (els.resultsSection) els.resultsSection.hidden = false;
+    if (index === session.currentIndex) btn.classList.add("active");
+    if ((session.answers[question.id] || []).length) btn.classList.add("answered");
+    if (session.marked.has(question.id)) btn.classList.add("marked");
 
-  renderResults(results);
+    btn.addEventListener("click", () => onClick(index));
+    container.appendChild(btn);
+  });
 }
 
-function calculateResults() {
-  const details = state.currentSession.questions.map((q) => {
-    const userAnswer = (state.answers[q.id] || []).slice().sort();
+function getAnsweredCount(session) {
+  return session.questions.filter((q) => (session.answers[q.id] || []).length > 0).length;
+}
+
+function buildResult(session) {
+  session.completed = true;
+
+  const details = session.questions.map((q, index) => {
+    const userAnswer = (session.answers[q.id] || []).slice().sort();
     const correctAnswer = q.correctAnswers.slice().sort();
     const isCorrect = arraysEqual(userAnswer, correctAnswer);
 
     return {
+      index: index + 1,
       question: q,
       userAnswer,
       correctAnswer,
@@ -609,85 +832,231 @@ function calculateResults() {
   });
 
   const correctCount = details.filter((d) => d.isCorrect).length;
-  const total = details.length;
-  const incorrectCount = total - correctCount;
-  const score = total ? Math.round((correctCount / total) * 100) : 0;
+  const incorrectCount = details.length - correctCount;
+  const scorePercent = details.length ? Math.round((correctCount / details.length) * 100) : 0;
+
+  const domainBreakdownMap = new Map();
+  details.forEach((detail) => {
+    const domain = detail.question.domain || "Okänd";
+    if (!domainBreakdownMap.has(domain)) {
+      domainBreakdownMap.set(domain, { domain, total: 0, correct: 0 });
+    }
+    const entry = domainBreakdownMap.get(domain);
+    entry.total += 1;
+    if (detail.isCorrect) entry.correct += 1;
+  });
+
+  const domainBreakdown = [...domainBreakdownMap.values()].map((entry) => ({
+    ...entry,
+    percent: entry.total ? Math.round((entry.correct / entry.total) * 100) : 0
+  }));
 
   return {
-    total,
+    mode: session.mode,
+    total: details.length,
     correctCount,
     incorrectCount,
-    score,
-    details
+    scorePercent,
+    details,
+    domainBreakdown,
+    completedAt: new Date().toISOString()
   };
 }
 
-function renderResults(results) {
-  if (els.resultsSummary) {
-    els.resultsSummary.innerHTML = `
-      <div><strong>Poäng:</strong> ${results.score}%</div>
-      <div><strong>Rätt:</strong> ${results.correctCount} av ${results.total}</div>
-      <div><strong>Fel:</strong> ${results.incorrectCount}</div>
-    `;
+function saveResult(result) {
+  state.review = result;
+
+  try {
+    localStorage.setItem("pmpTrainerLastResult", JSON.stringify(result));
+  } catch (error) {
+    console.warn("Kunde inte spara senaste resultat lokalt.", error);
   }
 
-  if (els.resultsDetails) {
-    els.resultsDetails.innerHTML = "";
+  renderRecentResultSummary();
+}
 
-    const correctBlock = document.createElement("div");
-    const incorrectBlock = document.createElement("div");
-
-    correctBlock.innerHTML = `<h3>Rätt besvarade frågor</h3>`;
-    incorrectBlock.innerHTML = `<h3>Fel besvarade frågor</h3>`;
-
-    results.details.forEach((item, index) => {
-      const card = document.createElement("div");
-      card.className = "result-card";
-      card.innerHTML = `
-        <div><strong>${index + 1}. ${escapeHtml(item.question.question)}</strong></div>
-        <div><strong>Rätt svar:</strong> ${item.correctAnswer.join(", ")}</div>
-        <div><strong>Ditt svar:</strong> ${item.userAnswer.length ? item.userAnswer.join(", ") : "Inget svar"}</div>
-        <div style="margin-top:6px;"><strong>Förklaring:</strong> ${escapeHtml(item.question.explanation || "")}</div>
-      `;
-
-      if (item.isCorrect) {
-        correctBlock.appendChild(card);
-      } else {
-        incorrectBlock.appendChild(card);
-      }
-    });
-
-    els.resultsDetails.appendChild(incorrectBlock);
-    els.resultsDetails.appendChild(correctBlock);
+function restoreRecentResult() {
+  try {
+    const raw = localStorage.getItem("pmpTrainerLastResult");
+    if (!raw) return;
+    state.review = JSON.parse(raw);
+  } catch (error) {
+    console.warn("Kunde inte läsa senaste resultat lokalt.", error);
   }
 }
 
-function restartApp() {
-  clearTimer();
-  state.currentSession = null;
-  state.currentIndex = 0;
-  state.answers = {};
-  state.flagged = new Set();
-  state.reviewMode = false;
-  state.examMode = false;
+function renderRecentResultSummary() {
+  if (!els.recentResultSummary) return;
+  if (!state.review) {
+    els.recentResultSummary.textContent = "Inga sparade resultat ännu.";
+    return;
+  }
 
-  if (els.resultsSection) els.resultsSection.hidden = true;
-  if (els.quizSection) els.quizSection.hidden = true;
-  if (els.setupSection) els.setupSection.hidden = false;
+  els.recentResultSummary.innerHTML = `
+    <strong>${escapeHtml(state.review.mode)}</strong><br>
+    Resultat: ${state.review.scorePercent}%<br>
+    Rätt: ${state.review.correctCount} av ${state.review.total}
+  `;
+}
+
+function renderReview() {
+  if (!state.review) {
+    els.reviewEmpty?.classList.remove("hidden");
+    els.reviewContent?.classList.add("hidden");
+    return;
+  }
+
+  els.reviewEmpty?.classList.add("hidden");
+  els.reviewContent?.classList.remove("hidden");
+
+  setText(els.reviewScorePercent, `${state.review.scorePercent}%`);
+  setText(els.reviewCorrectCount, String(state.review.correctCount));
+  setText(els.reviewIncorrectCount, String(state.review.incorrectCount));
+  setText(els.reviewMode, state.review.mode);
+
+  renderDomainBreakdown();
+  renderReviewQuestions();
+}
+
+function renderDomainBreakdown() {
+  if (!els.reviewDomainBreakdown || !state.review) return;
+  els.reviewDomainBreakdown.innerHTML = "";
+
+  state.review.domainBreakdown.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "domain-breakdown-row";
+    row.innerHTML = `
+      <div class="domain-breakdown-top">
+        <span>${escapeHtml(item.domain)}</span>
+        <span>${item.correct}/${item.total} (${item.percent}%)</span>
+      </div>
+      <div class="bar">
+        <div class="fill fill-generic" style="width:${item.percent}%"></div>
+      </div>
+    `;
+    els.reviewDomainBreakdown.appendChild(row);
+  });
+}
+
+function renderReviewQuestions() {
+  if (!els.reviewQuestions || !state.review || !els.reviewItemTemplate) return;
+
+  const statusFilter = els.reviewFilterStatus?.value || "all";
+  const domainFilter = els.reviewFilterDomain?.value || "";
+
+  const filtered = state.review.details.filter((item) => {
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "correct" && item.isCorrect) ||
+      (statusFilter === "incorrect" && !item.isCorrect);
+
+    const matchesDomain = !domainFilter || item.question.domain === domainFilter;
+
+    return matchesStatus && matchesDomain;
+  });
+
+  els.reviewQuestions.innerHTML = "";
+
+  filtered.forEach((item) => {
+    const clone = els.reviewItemTemplate.content.cloneNode(true);
+    const root = clone.querySelector(".review-item");
+
+    clone.querySelector(".review-domain").textContent = item.question.domain;
+    clone.querySelector(".review-task").textContent = formatTaskLabel(item.question);
+    clone.querySelector(".review-type").textContent = questionTypeLabel(item.question.type);
+    clone.querySelector(".review-difficulty").textContent = item.question.difficultyLabel;
+
+    const statusEl = clone.querySelector(".review-status");
+    statusEl.textContent = item.isCorrect ? "Rätt" : "Fel";
+    statusEl.classList.add(item.isCorrect ? "status-correct" : "status-incorrect");
+
+    const caseBlock = clone.querySelector(".review-case");
+    const caseText = clone.querySelector(".review-case-text");
+    const exhibitBlock = clone.querySelector(".review-exhibit");
+    const exhibitContent = clone.querySelector(".review-exhibit-content");
+    renderCaseAndExhibit(item.question, caseBlock, caseText, exhibitBlock, exhibitContent);
+
+    clone.querySelector(".review-question-title").textContent = `${item.index}. Fråga`;
+    clone.querySelector(".review-question-text").textContent = item.question.question;
+    clone.querySelector(".review-user-answer").textContent = formatAnswerForDisplay(item.question, item.userAnswer);
+    clone.querySelector(".review-correct-answer").textContent = formatAnswerForDisplay(item.question, item.correctAnswer);
+    clone.querySelector(".review-explanation-text").textContent = item.question.explanation || "Ingen förklaring tillgänglig.";
+
+    if (root) {
+      root.classList.add(item.isCorrect ? "review-correct" : "review-incorrect");
+    }
+
+    els.reviewQuestions.appendChild(clone);
+  });
+}
+
+function formatAnswerForDisplay(question, answerIds) {
+  if (!answerIds || !answerIds.length) return "Inget svar";
+  return answerIds
+    .map((id) => {
+      const option = question.options.find((o) => o.id === id);
+      return option ? `${id}. ${option.text}` : id;
+    })
+    .join(" | ");
+}
+
+function renderCaseAndExhibit(question, caseBlock, caseText, exhibitBlock, exhibitContent) {
+  const hasCase = !!question.caseText;
+  const hasExhibit = !!question.exhibitContent;
+
+  if (caseBlock) caseBlock.classList.toggle("hidden", !hasCase);
+  if (caseText) caseText.innerHTML = hasCase ? escapeHtml(question.caseText).replace(/\n/g, "<br>") : "";
+
+  if (exhibitBlock) exhibitBlock.classList.toggle("hidden", !hasExhibit);
+  if (exhibitContent) {
+    exhibitContent.innerHTML = hasExhibit ? escapeHtml(question.exhibitContent).replace(/\n/g, "<br>") : "";
+  }
+}
+
+function questionTypeLabel(type) {
+  if (type === "multiple") return "Multiple";
+  if (type === "case") return "Case";
+  if (type === "exhibit") return "Exhibit";
+  return "Single";
+}
+
+function instructionText(type) {
+  if (type === "multiple") return "Välj alla alternativ som är korrekta.";
+  return "Välj det bästa svaret.";
+}
+
+function updateButtonState(button, disabled) {
+  if (button) button.disabled = !!disabled;
+}
+
+function setText(el, text) {
+  if (el) el.textContent = text;
+}
+
+function setHtml(el, html) {
+  if (el) el.innerHTML = html;
+}
+
+function setWidth(el, percent) {
+  if (el) el.style.width = `${Math.max(0, Math.min(100, percent))}%`;
 }
 
 function arraysEqual(a, b) {
   if (a.length !== b.length) return false;
-  return a.every((val, i) => val === b[i]);
+  return a.every((value, index) => value === b[index]);
 }
 
 function shuffle(arr) {
   const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i--) {
+  for (let i = copy.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
+}
+
+function pad(n) {
+  return String(n).padStart(2, "0");
 }
 
 function escapeHtml(str) {
@@ -697,4 +1066,8 @@ function escapeHtml(str) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
