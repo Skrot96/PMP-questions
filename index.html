@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta
@@ -17,16 +17,20 @@
   <div id="app">
     <header class="app-header">
       <div class="container header-inner">
+        <div class="lang-switcher" aria-label="Language selector">
+          <button id="langEnBtn" class="lang-btn active" type="button">EN</button>
+          <button id="langSvBtn" class="lang-btn" type="button">SV</button>
+        </div>
         <div>
-          <h1>PMP Trainer 2026</h1>
+          <h1 id="appTitle">PMP Trainer 2026</h1>
           <p class="subtitle">
             Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026
           </p>
         </div>
         <div class="header-badges">
-          <span class="badge">180 frågor</span>
-          <span class="badge">230 minuter</span>
-          <span class="badge">Scenariofokus</span>
+          <span class="badge" id="badgeQuestions">180 questions</span>
+          <span class="badge" id="badgeMinutes">230 minutes</span>
+          <span class="badge" id="badgeScenario">Scenario-focused</span>
         </div>
       </div>
     </header>
@@ -47,18 +51,18 @@
         <div class="hero-card card">
           <div class="hero-grid">
             <div>
-              <h2>Träna strukturerat inför PMP 2026</h2>
-              <p>
-                Välj mellan riktad ämnesträning och fullständig examenssimulering.
-                Frågorna är organiserade efter domän, task, svårighetsgrad och frågetyp.
+              <h2 id="homeTitle">Practice systematically for PMP 2026</h2>
+              <p id="homeIntro">
+                Choose between targeted topic practice and a full exam simulation.
+                Questions are organized by domain, task, difficulty, and question type.
               </p>
 
               <div class="hero-actions">
                 <button id="startPracticeBtn" class="btn btn-primary">
-                  Starta övningsläge
+                  Start Practice
                 </button>
                 <button id="startExamBtn" class="btn btn-secondary">
-                  Starta simulerat prov
+                  Start Mock Exam
                 </button>
               </div>
             </div>
@@ -66,19 +70,19 @@
             <div class="hero-stats">
               <div class="stat-card">
                 <div class="stat-value" id="statsTotalQuestions">0</div>
-                <div class="stat-label">Frågor i databasen</div>
+                <div class="stat-label" id="statsQuestionsLabel">Questions in the bank</div>
               </div>
               <div class="stat-card">
                 <div class="stat-value">3</div>
-                <div class="stat-label">Domäner</div>
+                <div class="stat-label" id="statsDomainsLabel">Domains</div>
               </div>
               <div class="stat-card">
                 <div class="stat-value">26</div>
-                <div class="stat-label">Tasks</div>
+                <div class="stat-label" id="statsTasksLabel">Tasks</div>
               </div>
               <div class="stat-card">
                 <div class="stat-value">2026</div>
-                <div class="stat-label">Examformat</div>
+                <div class="stat-label" id="statsExamFormatLabel">Exam format</div>
               </div>
             </div>
           </div>
@@ -86,18 +90,18 @@
 
         <div class="dashboard-grid">
           <article class="card">
-            <h3>Examensupplägg</h3>
+            <h3 id="examOverviewTitle">Exam Overview</h3>
             <ul class="clean-list">
               <li>180 frågor</li>
               <li>230 minuter</li>
-              <li>Scenario- och tillämpningsfokus</li>
-              <li>Flera frågetyper</li>
-              <li>Pauser efter block 1 och 2</li>
+              <li id="examOverviewScenario">Scenario and application focus</li>
+              <li id="examOverviewTypes">Multiple question types</li>
+              <li id="examOverviewBreaks">Breaks after sections 1 and 2</li>
             </ul>
           </article>
 
           <article class="card">
-            <h3>Domänfördelning</h3>
+            <h3 id="domainDistributionTitle">Domain Distribution</h3>
             <div class="domain-bars">
               <div class="domain-bar">
                 <div class="domain-label">
@@ -124,9 +128,9 @@
           </article>
 
           <article class="card">
-            <h3>Senaste resultat</h3>
+            <h3 id="recentResultsTitle">Recent Results</h3>
             <div id="recentResultSummary" class="muted">
-              Inga sparade resultat ännu.
+              No saved results yet.
             </div>
           </article>
         </div>
@@ -136,9 +140,9 @@
       <section id="view-practice" class="view">
         <div class="section-header">
           <div>
-            <h2>Övningsläge</h2>
-            <p class="muted">
-              Filtrera frågor efter domän, task, tagg, svårighetsgrad och frågetyp.
+            <h2 id="practiceTitle">Practice Mode</h2>
+            <p id="practiceIntro" class="muted">
+              Filter questions by domain, task, tag, difficulty, and question type.
             </p>
           </div>
         </div>
@@ -146,9 +150,9 @@
         <div class="card filters-card">
           <div class="filters-grid">
             <div class="field">
-              <label for="practiceDomain">Domän</label>
+              <label for="practiceDomain">Domain</label>
               <select id="practiceDomain">
-                <option value="">Alla domäner</option>
+                <option value="">All domains</option>
               </select>
             </div>
 
@@ -160,19 +164,19 @@
             </div>
 
             <div class="field">
-              <label for="practiceDifficulty">Svårighetsgrad</label>
+              <label for="practiceDifficulty">Difficulty</label>
               <select id="practiceDifficulty">
-                <option value="">Alla nivåer</option>
-                <option value="easy">Lätt</option>
-                <option value="medium">Medel</option>
-                <option value="hard">Svår</option>
+                <option value="">All levels</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
               </select>
             </div>
 
             <div class="field">
-              <label for="practiceQuestionType">Frågetyp</label>
+              <label for="practiceQuestionType">Question type</label>
               <select id="practiceQuestionType">
-                <option value="">Alla typer</option>
+                <option value="">All types</option>
                 <option value="single">Single response</option>
                 <option value="multiple">Multiple response</option>
                 <option value="case">Case set</option>
@@ -181,14 +185,14 @@
             </div>
 
             <div class="field">
-              <label for="practiceTag">Tagg</label>
+              <label for="practiceTag">Tag</label>
               <select id="practiceTag">
-                <option value="">Alla taggar</option>
+                <option value="">All tags</option>
               </select>
             </div>
 
             <div class="field">
-              <label for="practiceCount">Antal frågor</label>
+              <label for="practiceCount">Number of questions</label>
               <select id="practiceCount">
                 <option value="10">10</option>
                 <option value="20" selected>20</option>
@@ -201,22 +205,22 @@
 
           <div class="filter-actions">
             <button id="practiceGenerateBtn" class="btn btn-primary">
-              Starta övningspass
+              Start Practice Session
             </button>
             <button id="practiceResetFiltersBtn" class="btn btn-ghost">
-              Återställ filter
+              Reset Filters
             </button>
           </div>
 
           <div id="practicePoolInfo" class="info-box muted">
-            Ingen frågesession startad ännu.
+            No practice session started yet.
           </div>
         </div>
 
         <div id="practiceSession" class="session-layout hidden">
           <aside class="session-sidebar card">
             <div class="sidebar-section">
-              <h3>Passöversikt</h3>
+              <h3 id="practiceSessionOverviewTitle">Session Overview</h3>
               <div id="practiceProgressText" class="muted">Fråga 0 av 0</div>
               <div class="progress">
                 <div id="practiceProgressBar" class="progress-fill" style="width: 0%"></div>
@@ -224,27 +228,27 @@
             </div>
 
             <div class="sidebar-section">
-              <h3>Status</h3>
+              <h3 id="practiceStatusTitle">Status</h3>
               <div class="status-grid">
                 <div>
-                  <span class="status-label">Besvarade</span>
+                  <span class="status-label" id="practiceAnsweredLabel">Answered</span>
                   <strong id="practiceAnsweredCount">0</strong>
                 </div>
                 <div>
-                  <span class="status-label">Ej besvarade</span>
+                  <span class="status-label" id="practiceUnansweredLabel">Unanswered</span>
                   <strong id="practiceUnansweredCount">0</strong>
                 </div>
               </div>
             </div>
 
             <div class="sidebar-section">
-              <h3>Navigering</h3>
+              <h3 id="practiceNavigationTitle">Navigation</h3>
               <div id="practiceQuestionNav" class="question-nav-grid"></div>
             </div>
 
             <div class="sidebar-section">
               <button id="practiceFinishBtn" class="btn btn-danger full-width">
-                Avsluta och rätta
+                Finish and Review
               </button>
             </div>
           </aside>
@@ -269,7 +273,7 @@
               </div>
 
               <div class="question-header">
-                <h3 id="practiceQuestionTitle">Fråga</h3>
+                <h3 id="practiceQuestionTitle" >Question</h3>
                 <div id="practiceQuestionInstruction" class="muted"></div>
               </div>
 
@@ -277,9 +281,9 @@
               <div id="practiceOptions" class="options-list"></div>
 
               <div class="question-actions">
-                <button id="practicePrevBtn" class="btn btn-ghost">Föregående</button>
-                <button id="practiceMarkBtn" class="btn btn-ghost">Markera</button>
-                <button id="practiceNextBtn" class="btn btn-primary">Nästa</button>
+                <button id="practicePrevBtn" class="btn btn-ghost">Previous</button>
+                <button id="practiceMarkBtn" class="btn btn-ghost">Mark</button>
+                <button id="practiceNextBtn" class="btn btn-primary">Next</button>
               </div>
             </div>
           </section>
@@ -290,9 +294,9 @@
       <section id="view-exam" class="view">
         <div class="section-header">
           <div>
-            <h2>Simulerat PMP-prov 2026</h2>
-            <p class="muted">
-              Fullständig examsimulering med 180 frågor och 230 minuter.
+            <h2 id="examTitle">PMP Mock Exam 2026</h2>
+            <p id="examIntro" class="muted">
+              A full exam simulation with 180 questions and 230 minutes.
             </p>
           </div>
         </div>
@@ -300,41 +304,41 @@
         <div id="examSetup" class="card">
           <div class="exam-setup-grid">
             <div>
-              <h3>Inställningar</h3>
+              <h3 id="examSettingsTitle">Settings</h3>
               <div class="field checkbox-field">
-                <label>
+                <label id="examShuffleQuestionsLabel">
                   <input type="checkbox" id="examShuffleQuestions" checked />
-                  Blanda frågornas ordning
+                  Shuffle question order
                 </label>
               </div>
               <div class="field checkbox-field">
-                <label>
+                <label id="examShuffleOptionsLabel">
                   <input type="checkbox" id="examShuffleOptions" checked />
-                  Blanda svarsalternativ
+                  Shuffle answer options
                 </label>
               </div>
               <div class="field checkbox-field">
-                <label>
+                <label id="examEnableBreaksLabel">
                   <input type="checkbox" id="examEnableBreaks" checked />
-                  Visa rekommenderade pauser efter fråga 60 och 120
+                  Show recommended breaks after questions 60 and 120
                 </label>
               </div>
             </div>
 
             <div>
-              <h3>Provformat</h3>
+              <h3 id="examFormatTitle">Exam format</h3>
               <ul class="clean-list">
                 <li>180 frågor</li>
                 <li>230 minuter</li>
-                <li>Domänmix enligt 2026-fördelning</li>
-                <li>Single, multiple, case och exhibit</li>
+                <li id="examFormatMix">Domain mix aligned with the 2026 distribution</li>
+                <li id="examFormatTypes">Single, multiple, case, and exhibit</li>
               </ul>
             </div>
           </div>
 
           <div class="filter-actions">
             <button id="examStartBtn" class="btn btn-primary">
-              Starta prov
+              Start Exam
             </button>
           </div>
         </div>
@@ -342,12 +346,12 @@
         <div id="examSession" class="session-layout hidden">
           <aside class="session-sidebar card">
             <div class="sidebar-section">
-              <h3>Tid kvar</h3>
+              <h3 id="examTimeRemainingTitle">Time Remaining</h3>
               <div id="examTimer" class="timer">03:50:00</div>
             </div>
 
             <div class="sidebar-section">
-              <h3>Framsteg</h3>
+              <h3 id="examProgressTitle">Progress</h3>
               <div id="examProgressText" class="muted">Fråga 0 av 180</div>
               <div class="progress">
                 <div id="examProgressBar" class="progress-fill" style="width: 0%"></div>
@@ -355,37 +359,37 @@
             </div>
 
             <div class="sidebar-section">
-              <h3>Status</h3>
+              <h3 id="practiceStatusTitle">Status</h3>
               <div class="status-grid">
                 <div>
-                  <span class="status-label">Besvarade</span>
+                  <span class="status-label" id="practiceAnsweredLabel">Answered</span>
                   <strong id="examAnsweredCount">0</strong>
                 </div>
                 <div>
-                  <span class="status-label">Markerade</span>
+                  <span class="status-label" id="examMarkedLabel">Marked</span>
                   <strong id="examMarkedCount">0</strong>
                 </div>
               </div>
             </div>
 
             <div class="sidebar-section">
-              <h3>Navigering</h3>
+              <h3 id="practiceNavigationTitle">Navigation</h3>
               <div id="examQuestionNav" class="question-nav-grid exam-nav-grid"></div>
             </div>
 
             <div class="sidebar-section">
               <button id="examFinishBtn" class="btn btn-danger full-width">
-                Lämna in prov
+                Submit Exam
               </button>
             </div>
           </aside>
 
           <section class="session-main">
             <div id="examBreakNotice" class="card break-card hidden">
-              <h3>Rekommenderad paus</h3>
+              <h3 id="examBreakTitle">Recommended Break</h3>
               <p id="examBreakText"></p>
               <button id="examContinueAfterBreakBtn" class="btn btn-primary">
-                Fortsätt provet
+                Continue Exam
               </button>
             </div>
 
@@ -408,7 +412,7 @@
               </div>
 
               <div class="question-header">
-                <h3 id="examQuestionTitle">Fråga</h3>
+                <h3 id="examQuestionTitle" >Question</h3>
                 <div id="examQuestionInstruction" class="muted"></div>
               </div>
 
@@ -416,9 +420,9 @@
               <div id="examOptions" class="options-list"></div>
 
               <div class="question-actions">
-                <button id="examPrevBtn" class="btn btn-ghost">Föregående</button>
-                <button id="examMarkBtn" class="btn btn-ghost">Markera</button>
-                <button id="examNextBtn" class="btn btn-primary">Nästa</button>
+                <button id="examPrevBtn" class="btn btn-ghost">Previous</button>
+                <button id="examMarkBtn" class="btn btn-ghost">Mark</button>
+                <button id="examNextBtn" class="btn btn-primary">Next</button>
               </div>
             </div>
           </section>
@@ -429,43 +433,43 @@
       <section id="view-review" class="view">
         <div class="section-header">
           <div>
-            <h2>Resultat och genomgång</h2>
-            <p class="muted">
-              Se rätt/fel, egna svar, facit och förklaringar.
+            <h2 id="reviewTitle">Results and Review</h2>
+            <p id="reviewIntro" class="muted">
+              See correct and incorrect answers, your responses, the answer key, and explanations.
             </p>
           </div>
         </div>
 
         <div id="reviewEmpty" class="card">
-          <p>Inget resultat att visa ännu. Genomför först ett övningspass eller ett simulerat prov.</p>
+          <p id="reviewEmptyText">No results to show yet. Complete a practice session or a mock exam first.</p>
         </div>
 
         <div id="reviewContent" class="hidden">
           <div class="review-summary-grid">
             <article class="card">
-              <h3>Översikt</h3>
+              <h3 id="reviewOverviewTitle">Overview</h3>
               <div class="summary-metrics">
                 <div class="metric">
                   <div id="reviewScorePercent" class="metric-value">0%</div>
-                  <div class="metric-label">Resultat</div>
+                  <div class="metric-label" id="reviewScoreLabel">Score</div>
                 </div>
                 <div class="metric">
                   <div id="reviewCorrectCount" class="metric-value">0</div>
-                  <div class="metric-label">Rätt</div>
+                  <div class="metric-label" id="reviewCorrectLabel">Correct</div>
                 </div>
                 <div class="metric">
                   <div id="reviewIncorrectCount" class="metric-value">0</div>
-                  <div class="metric-label">Fel</div>
+                  <div class="metric-label" id="reviewIncorrectLabel">Incorrect</div>
                 </div>
                 <div class="metric">
                   <div id="reviewMode" class="metric-value">-</div>
-                  <div class="metric-label">Läge</div>
+                  <div class="metric-label" id="reviewModeLabel">Mode</div>
                 </div>
               </div>
             </article>
 
             <article class="card">
-              <h3>Resultat per domän</h3>
+              <h3 id="reviewByDomainTitle">Results by Domain</h3>
               <div id="reviewDomainBreakdown" class="domain-breakdown"></div>
             </article>
           </div>
@@ -473,18 +477,18 @@
           <div class="card review-toolbar">
             <div class="filters-grid">
               <div class="field">
-                <label for="reviewFilterStatus">Filtrera status</label>
+                <label for="reviewFilterStatus">Filter by status</label>
                 <select id="reviewFilterStatus">
-                  <option value="all">Alla</option>
-                  <option value="correct">Endast rätt</option>
-                  <option value="incorrect">Endast fel</option>
+                  <option value="all">All</option>
+                  <option value="correct">Correct only</option>
+                  <option value="incorrect">Incorrect only</option>
                 </select>
               </div>
 
               <div class="field">
-                <label for="reviewFilterDomain">Filtrera domän</label>
+                <label for="reviewFilterDomain">Filter by domain</label>
                 <select id="reviewFilterDomain">
-                  <option value="">Alla domäner</option>
+                  <option value="">All domains</option>
                 </select>
               </div>
             </div>
@@ -497,35 +501,32 @@
       <!-- ABOUT -->
       <section id="view-about" class="view">
         <div class="card prose">
-          <h2>Om programmet</h2>
-          <p>
-            Den här applikationen är byggd för att ge strukturerad träning inför
-            PMP-examen enligt 2026 års upplägg. Frågorna är träningsfrågor och
-            inte officiella PMI-frågor.
+          <h2 id="aboutTitle">About the Program</h2>
+          <p id="aboutP1">
+            This application is built to provide structured preparation for the PMP exam using the 2026 format. The questions are practice questions and are not official PMI questions.
           </p>
 
-          <h3>Filer i projektet</h3>
+          <h3 id="aboutFilesTitle">Project Files</h3>
           <ul>
-            <li><code>index.html</code> – gränssnitt och struktur</li>
-            <li><code>styles.css</code> – layout och visuell design</li>
-            <li><code>app.js</code> – logik för frågor, prov, timer och resultat</li>
-            <li><code>data/questions.json</code> – frågebanken</li>
+            <li id="aboutFileIndex"><code>index.html</code> – interface and structure</li>
+            <li id="aboutFileStyles"><code>styles.css</code> – layout and visual design</li>
+            <li id="aboutFileApp"><code>app.js</code> – logic for questions, exams, timer, and results</li>
+            <li id="aboutFileData"><code>data/questions.json</code> – question bank</li>
           </ul>
 
-          <h3>Så används programmet</h3>
+          <h3 id="aboutUseTitle">How to Use the Program</h3>
           <ol>
-            <li>Placera alla filer i samma projektmapp.</li>
-            <li>Lägg <code>questions.json</code> i undermappen <code>data</code>.</li>
-            <li>Öppna <code>index.html</code> i en webbläsare.</li>
+            <li id="aboutStep1">Place all files in the same project folder.</li>
+            <li id="aboutStep2">Put <code>questions.json</code> in the <code>data</code> subfolder.</li>
+            <li id="aboutStep3">Open <code>index.html</code> in a web browser.</li>
             <li>
-              Om webbläsaren blockerar lokal JSON-läsning, kör projektet via en enkel lokal server.
+              If the browser blocks local JSON loading, run the project through a simple local server.
             </li>
           </ol>
 
-          <h3>Obs</h3>
-          <p>
-            Programmet är gjort för träning. För skarp certifieringsförberedelse
-            bör frågorna kompletteras med manuell kvalitetsgranskning och återkommande förbättringar.
+          <h3 id="aboutNoteTitle">Note</h3>
+          <p id="aboutNoteText">
+            This program is designed for practice. For serious certification preparation, the questions should be supplemented with manual quality review and ongoing improvements.
           </p>
         </div>
       </section>
@@ -559,17 +560,17 @@
 
       <div class="review-answers">
         <div class="answer-box">
-          <h4>Ditt svar</h4>
+          <h4 id="reviewTemplateYourAnswerTitle">Your answer</h4>
           <div class="review-user-answer"></div>
         </div>
         <div class="answer-box">
-          <h4>Rätt svar</h4>
+          <h4 id="reviewTemplateCorrectAnswerTitle">Correct answer</h4>
           <div class="review-correct-answer"></div>
         </div>
       </div>
 
       <div class="review-explanation">
-        <h4>Förklaring</h4>
+        <h4 id="reviewTemplateExplanationTitle">Explanation</h4>
         <div class="review-explanation-text"></div>
       </div>
     </article>
