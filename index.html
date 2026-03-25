@@ -9,9 +9,9 @@
   <title>PMP Trainer 2026</title>
   <meta
     name="description"
-    content="PMP Trainer 2026 - övningsfrågor och simulerat prov enligt PMP-examen från 9 juli 2026."
+    content="PMP Trainer 2026 - bilingual PMP practice app with English questions and Swedish or English user interface."
   />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles_i18n_logo.css" />
 </head>
 <body>
   <div id="app">
@@ -21,11 +21,14 @@
           <button id="langEnBtn" class="lang-btn active" type="button">EN</button>
           <button id="langSvBtn" class="lang-btn" type="button">SV</button>
         </div>
-        <div>
-          <h1 id="appTitle">PMP Trainer 2026</h1>
-          <p class="subtitle">
-            Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026
-          </p>
+        <div class="brand-block">
+          <img src="CANEA-Logo-2021-RGB.jpg" alt="CANEA" class="brand-logo" />
+          <div class="brand-text">
+            <h1 id="appTitle">PMP Trainer 2026</h1>
+            <p class="subtitle">
+              Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026
+            </p>
+          </div>
         </div>
         <div class="header-badges">
           <span class="badge" id="badgeQuestions">180 questions</span>
@@ -576,6 +579,6 @@
     </article>
   </template>
 
-  <script src="app.js"></script>
+  <script src="app_i18n_v2.js"></script>
 </body>
 </html>

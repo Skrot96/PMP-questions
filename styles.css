@@ -839,3 +839,28 @@ textarea:focus {
     order: -1;
   }
 }
+
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: auto;
+  height: 64px;
+  max-width: min(42vw, 320px);
+  object-fit: contain;
+  display: block;
+}
+
+.brand-text {
+  min-width: 0;
+}
+
+.brand-text h1 {
+  margin: 0 0 6px;
+}
