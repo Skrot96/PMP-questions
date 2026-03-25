@@ -93,6 +93,30 @@ button {
   flex-wrap: wrap;
   justify-content: flex-end;
 }
+.brand-title-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: auto;
+  height: 42px;
+  max-width: 180px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand-copy .subtitle {
+  max-width: 620px;
+}
+
 
 .badge {
   display: inline-flex;
@@ -782,6 +806,16 @@ textarea:focus {
     align-items: stretch;
   }
 
+  .brand-title-group {
+    gap: 12px;
+    align-items: center;
+  }
+
+  .brand-logo {
+    height: 34px;
+    max-width: 140px;
+  }
+
   .hero-stats,
   .filters-grid,
   .review-answers,
@@ -838,29 +872,4 @@ textarea:focus {
     margin-left: 0;
     order: -1;
   }
-}
-
-
-.brand-block {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.brand-logo {
-  width: auto;
-  height: 64px;
-  max-width: min(42vw, 320px);
-  object-fit: contain;
-  display: block;
-}
-
-.brand-text {
-  min-width: 0;
-}
-
-.brand-text h1 {
-  margin: 0 0 6px;
 }
