@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>PMP Trainer 2026</title>
+  <meta
+    name="description"
+    content="PMP Trainer 2026 - övningsfrågor och simulerat prov enligt PMP-examen från 9 juli 2026."
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="container header-inner">
+        <div class="lang-switcher" aria-label="Language selector">
+          <button id="langEnBtn" class="lang-btn active" type="button">EN</button>
+          <button id="langSvBtn" class="lang-btn" type="button">SV</button>
+        </div>
+        <div class="brand-title-group">
+          <img src="CANEA-Logo-2021-RGB.png" alt="CANEA" class="brand-logo" />
+          <div class="brand-copy">
+            <h1 id="appTitle">PMP Trainer 2026</h1>
+            <p class="subtitle">
+              Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026
+            </p>
+          </div>
+        </div>
+        <div class="header-badges">
+          <span class="badge" id="badgeQuestions">180 questions</span>
+          <span class="badge" id="badgeMinutes">230 minutes</span>
+          <span class="badge" id="badgeScenario">Scenario-focused</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="top-nav">
+      <div class="container nav-inner">
+        <button class="nav-btn active" data-view="home">Start</button>
+        <button class="nav-btn" data-view="practice">Övningsläge</button>
+        <button class="nav-btn" data-view="exam">Simulerat prov</button>
+        <button class="nav-btn" data-view="review">Resultat</button>
+        <button class="nav-btn" data-view="about">Om</button>
+      </div>
+    </nav>
+
+    <main class="container main-content">
+      <!-- START -->
+      <section id="view-home" class="view active">
+        <div class="hero-card card">
+          <div class="hero-grid">
+            <div>
+              <h2 id="homeTitle">Practice systematically for PMP 2026</h2>
+              <p id="homeIntro">
+                Choose between targeted topic practice and a full exam simulation.
+                Questions are organized by domain, task, difficulty, and question type.
+              </p>
+
+              <div class="hero-actions">
+                <button id="startPracticeBtn" class="btn btn-primary">
+                  Start Practice
+                </button>
+                <button id="startExamBtn" class="btn btn-secondary">
+                  Start Mock Exam
+                </button>
+              </div>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat-card">
+                <div class="stat-value" id="statsTotalQuestions">0</div>
+                <div class="stat-label" id="statsQuestionsLabel">Questions in the bank</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">3</div>
+                <div class="stat-label" id="statsDomainsLabel">Domains</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">26</div>
+                <div class="stat-label" id="statsTasksLabel">Tasks</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">2026</div>
+                <div class="stat-label" id="statsExamFormatLabel">Exam format</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="card">
+            <h3 id="examOverviewTitle">Exam Overview</h3>
+            <ul class="clean-list">
+              <li>180 frågor</li>
+              <li>230 minuter</li>
+              <li id="examOverviewScenario">Scenario and application focus</li>
+              <li id="examOverviewTypes">Multiple question types</li>
+              <li id="examOverviewBreaks">Breaks after sections 1 and 2</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3 id="domainDistributionTitle">Domain Distribution</h3>
+            <div class="domain-bars">
+              <div class="domain-bar">
+                <div class="domain-label">
+                  <span>People</span>
+                  <span>33%</span>
+                </div>
+                <div class="bar"><div class="fill fill-people" style="width: 33%"></div></div>
+              </div>
+              <div class="domain-bar">
+                <div class="domain-label">
+                  <span>Process</span>
+                  <span>41%</span>
+                </div>
+                <div class="bar"><div class="fill fill-process" style="width: 41%"></div></div>
+              </div>
+              <div class="domain-bar">
+                <div class="domain-label">
+                  <span>Business Environment</span>
+                  <span>26%</span>
+                </div>
+                <div class="bar"><div class="fill fill-business" style="width: 26%"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3 id="recentResultsTitle">Recent Results</h3>
+            <div id="recentResultSummary" class="muted">
+              No saved results yet.
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- PRACTICE -->
+      <section id="view-practice" class="view">
+        <div class="section-header">
+          <div>
+            <h2 id="practiceTitle">Practice Mode</h2>
+            <p id="practiceIntro" class="muted">
+              Filter questions by domain, task, tag, difficulty, and question type.
+            </p>
+          </div>
+        </div>
+
+        <div class="card filters-card">
+          <div class="filters-grid">
+            <div class="field">
+              <label for="practiceDomain">Domain</label>
+              <select id="practiceDomain">
+                <option value="">All domains</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="practiceTask">Task</label>
+              <select id="practiceTask">
+                <option value="">Alla tasks</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="practiceDifficulty">Difficulty</label>
+              <select id="practiceDifficulty">
+                <option value="">All levels</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="practiceQuestionType">Question type</label>
+              <select id="practiceQuestionType">
+                <option value="">All types</option>
+                <option value="single">Single response</option>
+                <option value="multiple">Multiple response</option>
+                <option value="case">Case set</option>
+                <option value="exhibit">Exhibit</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="practiceTag">Tag</label>
+              <select id="practiceTag">
+                <option value="">All tags</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="practiceCount">Number of questions</label>
+              <select id="practiceCount">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button id="practiceGenerateBtn" class="btn btn-primary">
+              Start Practice Session
+            </button>
+            <button id="practiceResetFiltersBtn" class="btn btn-ghost">
+              Reset Filters
+            </button>
+          </div>
+
+          <div id="practicePoolInfo" class="info-box muted">
+            No practice session started yet.
+          </div>
+        </div>
+
+        <div id="practiceSession" class="session-layout hidden">
+          <aside class="session-sidebar card">
+            <div class="sidebar-section">
+              <h3 id="practiceSessionOverviewTitle">Session Overview</h3>
+              <div id="practiceProgressText" class="muted">Fråga 0 av 0</div>
+              <div class="progress">
+                <div id="practiceProgressBar" class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 id="practiceStatusTitle">Status</h3>
+              <div class="status-grid">
+                <div>
+                  <span class="status-label" id="practiceAnsweredLabel">Answered</span>
+                  <strong id="practiceAnsweredCount">0</strong>
+                </div>
+                <div>
+                  <span class="status-label" id="practiceUnansweredLabel">Unanswered</span>
+                  <strong id="practiceUnansweredCount">0</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 id="practiceNavigationTitle">Navigation</h3>
+              <div id="practiceQuestionNav" class="question-nav-grid"></div>
+            </div>
+
+            <div class="sidebar-section">
+              <button id="practiceFinishBtn" class="btn btn-danger full-width">
+                Finish and Review
+              </button>
+            </div>
+          </aside>
+
+          <section class="session-main">
+            <div id="practiceQuestionCard" class="card question-card">
+              <div class="question-meta">
+                <span id="practiceMetaDomain" class="pill"></span>
+                <span id="practiceMetaTask" class="pill"></span>
+                <span id="practiceMetaType" class="pill"></span>
+                <span id="practiceMetaDifficulty" class="pill"></span>
+              </div>
+
+              <div id="practiceCaseBlock" class="case-block hidden">
+                <h3>Case</h3>
+                <div id="practiceCaseText"></div>
+              </div>
+
+              <div id="practiceExhibitBlock" class="exhibit-block hidden">
+                <h3>Exhibit</h3>
+                <div id="practiceExhibitContent"></div>
+              </div>
+
+              <div class="question-header">
+                <h3 id="practiceQuestionTitle" >Question</h3>
+                <div id="practiceQuestionInstruction" class="muted"></div>
+              </div>
+
+              <div id="practiceQuestionText" class="question-text"></div>
+              <div id="practiceOptions" class="options-list"></div>
+
+              <div class="question-actions">
+                <button id="practicePrevBtn" class="btn btn-ghost">Previous</button>
+                <button id="practiceMarkBtn" class="btn btn-ghost">Mark</button>
+                <button id="practiceNextBtn" class="btn btn-primary">Next</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- EXAM -->
+      <section id="view-exam" class="view">
+        <div class="section-header">
+          <div>
+            <h2 id="examTitle">PMP Mock Exam 2026</h2>
+            <p id="examIntro" class="muted">
+              A full exam simulation with 180 questions and 230 minutes.
+            </p>
+          </div>
+        </div>
+
+        <div id="examSetup" class="card">
+          <div class="exam-setup-grid">
+            <div>
+              <h3 id="examSettingsTitle">Settings</h3>
+              <div class="field checkbox-field">
+                <label id="examShuffleQuestionsLabel">
+                  <input type="checkbox" id="examShuffleQuestions" checked />
+                  Shuffle question order
+                </label>
+              </div>
+              <div class="field checkbox-field">
+                <label id="examShuffleOptionsLabel">
+                  <input type="checkbox" id="examShuffleOptions" checked />
+                  Shuffle answer options
+                </label>
+              </div>
+              <div class="field checkbox-field">
+                <label id="examEnableBreaksLabel">
+                  <input type="checkbox" id="examEnableBreaks" checked />
+                  Show recommended breaks after questions 60 and 120
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <h3 id="examFormatTitle">Exam format</h3>
+              <ul class="clean-list">
+                <li>180 frågor</li>
+                <li>230 minuter</li>
+                <li id="examFormatMix">Domain mix aligned with the 2026 distribution</li>
+                <li id="examFormatTypes">Single, multiple, case, and exhibit</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button id="examStartBtn" class="btn btn-primary">
+              Start Exam
+            </button>
+          </div>
+        </div>
+
+        <div id="examSession" class="session-layout hidden">
+          <aside class="session-sidebar card">
+            <div class="sidebar-section">
+              <h3 id="examTimeRemainingTitle">Time Remaining</h3>
+              <div id="examTimer" class="timer">03:50:00</div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 id="examProgressTitle">Progress</h3>
+              <div id="examProgressText" class="muted">Fråga 0 av 180</div>
+              <div class="progress">
+                <div id="examProgressBar" class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 id="practiceStatusTitle">Status</h3>
+              <div class="status-grid">
+                <div>
+                  <span class="status-label" id="practiceAnsweredLabel">Answered</span>
+                  <strong id="examAnsweredCount">0</strong>
+                </div>
+                <div>
+                  <span class="status-label" id="examMarkedLabel">Marked</span>
+                  <strong id="examMarkedCount">0</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 id="practiceNavigationTitle">Navigation</h3>
+              <div id="examQuestionNav" class="question-nav-grid exam-nav-grid"></div>
+            </div>
+
+            <div class="sidebar-section">
+              <button id="examFinishBtn" class="btn btn-danger full-width">
+                Submit Exam
+              </button>
+            </div>
+          </aside>
+
+          <section class="session-main">
+            <div id="examBreakNotice" class="card break-card hidden">
+              <h3 id="examBreakTitle">Recommended Break</h3>
+              <p id="examBreakText"></p>
+              <button id="examContinueAfterBreakBtn" class="btn btn-primary">
+                Continue Exam
+              </button>
+            </div>
+
+            <div id="examQuestionCard" class="card question-card">
+              <div class="question-meta">
+                <span id="examMetaDomain" class="pill"></span>
+                <span id="examMetaTask" class="pill"></span>
+                <span id="examMetaType" class="pill"></span>
+                <span id="examMetaDifficulty" class="pill"></span>
+              </div>
+
+              <div id="examCaseBlock" class="case-block hidden">
+                <h3>Case</h3>
+                <div id="examCaseText"></div>
+              </div>
+
+              <div id="examExhibitBlock" class="exhibit-block hidden">
+                <h3>Exhibit</h3>
+                <div id="examExhibitContent"></div>
+              </div>
+
+              <div class="question-header">
+                <h3 id="examQuestionTitle" >Question</h3>
+                <div id="examQuestionInstruction" class="muted"></div>
+              </div>
+
+              <div id="examQuestionText" class="question-text"></div>
+              <div id="examOptions" class="options-list"></div>
+
+              <div class="question-actions">
+                <button id="examPrevBtn" class="btn btn-ghost">Previous</button>
+                <button id="examMarkBtn" class="btn btn-ghost">Mark</button>
+                <button id="examNextBtn" class="btn btn-primary">Next</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- REVIEW -->
+      <section id="view-review" class="view">
+        <div class="section-header">
+          <div>
+            <h2 id="reviewTitle">Results and Review</h2>
+            <p id="reviewIntro" class="muted">
+              See correct and incorrect answers, your responses, the answer key, and explanations.
+            </p>
+          </div>
+        </div>
+
+        <div id="reviewEmpty" class="card">
+          <p id="reviewEmptyText">No results to show yet. Complete a practice session or a mock exam first.</p>
+        </div>
+
+        <div id="reviewContent" class="hidden">
+          <div class="review-summary-grid">
+            <article class="card">
+              <h3 id="reviewOverviewTitle">Overview</h3>
+              <div class="summary-metrics">
+                <div class="metric">
+                  <div id="reviewScorePercent" class="metric-value">0%</div>
+                  <div class="metric-label" id="reviewScoreLabel">Score</div>
+                </div>
+                <div class="metric">
+                  <div id="reviewCorrectCount" class="metric-value">0</div>
+                  <div class="metric-label" id="reviewCorrectLabel">Correct</div>
+                </div>
+                <div class="metric">
+                  <div id="reviewIncorrectCount" class="metric-value">0</div>
+                  <div class="metric-label" id="reviewIncorrectLabel">Incorrect</div>
+                </div>
+                <div class="metric">
+                  <div id="reviewMode" class="metric-value">-</div>
+                  <div class="metric-label" id="reviewModeLabel">Mode</div>
+                </div>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3 id="reviewByDomainTitle">Results by Domain</h3>
+              <div id="reviewDomainBreakdown" class="domain-breakdown"></div>
+            </article>
+          </div>
+
+          <div class="card review-toolbar">
+            <div class="filters-grid">
+              <div class="field">
+                <label for="reviewFilterStatus">Filter by status</label>
+                <select id="reviewFilterStatus">
+                  <option value="all">All</option>
+                  <option value="correct">Correct only</option>
+                  <option value="incorrect">Incorrect only</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="reviewFilterDomain">Filter by domain</label>
+                <select id="reviewFilterDomain">
+                  <option value="">All domains</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="reviewQuestions" class="review-list"></div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="view-about" class="view">
+        <div class="card prose">
+          <h2 id="aboutTitle">About the Program</h2>
+          <p id="aboutP1">
+            This application is built to provide structured preparation for the PMP exam using the 2026 format. The questions are practice questions and are not official PMI questions.
+          </p>
+
+          <h3 id="aboutFilesTitle">Project Files</h3>
+          <ul>
+            <li id="aboutFileIndex"><code>index.html</code> – interface and structure</li>
+            <li id="aboutFileStyles"><code>styles.css</code> – layout and visual design</li>
+            <li id="aboutFileApp"><code>app.js</code> – logic for questions, exams, timer, and results</li>
+            <li id="aboutFileData"><code>data/questions.json</code> – question bank</li>
+          </ul>
+
+          <h3 id="aboutUseTitle">How to Use the Program</h3>
+          <ol>
+            <li id="aboutStep1">Place all files in the same project folder.</li>
+            <li id="aboutStep2">Put <code>questions.json</code> in the <code>data</code> subfolder.</li>
+            <li id="aboutStep3">Open <code>index.html</code> in a web browser.</li>
+            <li>
+              If the browser blocks local JSON loading, run the project through a simple local server.
+            </li>
+          </ol>
+
+          <h3 id="aboutNoteTitle">Note</h3>
+          <p id="aboutNoteText">
+            This program is designed for practice. For serious certification preparation, the questions should be supplemented with manual quality review and ongoing improvements.
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="reviewItemTemplate">
+    <article class="card review-item">
+      <div class="review-item-header">
+        <div class="review-item-meta">
+          <span class="pill review-domain"></span>
+          <span class="pill review-task"></span>
+          <span class="pill review-type"></span>
+          <span class="pill review-difficulty"></span>
+        </div>
+        <div class="review-status"></div>
+      </div>
+
+      <div class="review-case hidden">
+        <h4>Case</h4>
+        <div class="review-case-text"></div>
+      </div>
+
+      <div class="review-exhibit hidden">
+        <h4>Exhibit</h4>
+        <div class="review-exhibit-content"></div>
+      </div>
+
+      <h3 class="review-question-title"></h3>
+      <div class="review-question-text"></div>
+
+      <div class="review-answers">
+        <div class="answer-box">
+          <h4 id="reviewTemplateYourAnswerTitle">Your answer</h4>
+          <div class="review-user-answer"></div>
+        </div>
+        <div class="answer-box">
+          <h4 id="reviewTemplateCorrectAnswerTitle">Correct answer</h4>
+          <div class="review-correct-answer"></div>
+        </div>
+      </div>
+
+      <div class="review-explanation">
+        <h4 id="reviewTemplateExplanationTitle">Explanation</h4>
+        <div class="review-explanation-text"></div>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
