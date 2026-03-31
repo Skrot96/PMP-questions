@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PMP Trainer 2026</title>
+  <meta name="description" content="PMP Trainer 2026 – övningsfrågor och simulerat prov enligt PMP-examen från 9 juli 2026." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Skip link (WCAG 2.4.1) -->
+  <a href="#main-content" class="skip-link">Hoppa till innehållet</a>
+
+  <div id="app">
+    <header class="app-header" role="banner">
+      <div class="container header-inner">
+
+        <div class="brand-title-group">
+          <img src="CANEA-Logo-2021-RGB.png" alt="CANEA" class="brand-logo" />
+          <div class="brand-copy">
+            <h1 id="appTitle">PMP Trainer 2026</h1>
+          </div>
+        </div>
+
+        <div class="header-badges" aria-hidden="true">
+          <span class="badge" id="badgeQuestions">180 frågor</span>
+          <span class="badge" id="badgeMinutes">230 minuter</span>
+          <span class="badge" id="badgeScenario">Scenariofokus</span>
+        </div>
+
+        <div class="header-right">
+          <div id="userInfo" class="user-info hidden">
+            <span id="userEmail" class="user-email" aria-label="Inloggad som"></span>
+            <button id="logoutBtn" class="btn btn-ghost btn-sm" type="button">Logga ut</button>
+          </div>
+
+          <div class="lang-switcher" role="group" aria-label="Välj språk">
+            <button id="langSvBtn" class="lang-btn active" type="button" aria-pressed="true" lang="sv">SV</button>
+            <button id="langEnBtn" class="lang-btn" type="button" aria-pressed="false" lang="en">EN</button>
+          </div>
+        </div>
+
+        <p class="subtitle" id="appSubtitle">
+          Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026
+        </p>
+
+      </div>
+    </header>
+
+    <nav class="top-nav" aria-label="Huvudnavigering">
+      <div class="container nav-inner">
+        <button class="nav-btn active" data-view="home"     aria-current="page">Start</button>
+        <button class="nav-btn"        data-view="practice"               >Övningsläge</button>
+        <button class="nav-btn"        data-view="exam"                   >Simulerat prov</button>
+        <button class="nav-btn"        data-view="review"                 >Resultat</button>
+        <button class="nav-btn"        data-view="about"                  >Om</button>
+      </div>
+    </nav>
+
+    <main id="main-content" class="container main-content">
+
+      <!-- ── START ──────────────────────────────────────────── -->
+      <section id="view-home" class="view active" aria-labelledby="homeTitle">
+        <div class="hero-card card">
+          <div class="hero-grid">
+            <div>
+              <h2 id="homeTitle">Träna systematiskt inför PMP 2026</h2>
+              <p id="homeIntro" class="muted">
+                Välj mellan riktad ämnesträning och ett fullständigt provsimulerat.
+                Frågorna är organiserade efter domän, uppgift, svårighetsgrad och frågetyp.
+              </p>
+              <div class="hero-actions">
+                <button id="startPracticeBtn" class="btn btn-primary">Starta övningsläge</button>
+                <button id="startExamBtn"     class="btn btn-secondary">Starta simulerat prov</button>
+              </div>
+            </div>
+
+            <div class="hero-stats" aria-label="Statistik">
+              <div class="stat-card">
+                <div class="stat-value" id="statsTotalQuestions">0</div>
+                <div class="stat-label" id="statsQuestionsLabel">Frågor i banken</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">3</div>
+                <div class="stat-label" id="statsDomainsLabel">Domäner</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">26</div>
+                <div class="stat-label" id="statsTasksLabel">Uppgifter</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">2026</div>
+                <div class="stat-label" id="statsExamFormatLabel">Provformat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="card" aria-labelledby="examOverviewTitle">
+            <h3 id="examOverviewTitle">Provöversikt</h3>
+            <ul class="clean-list">
+              <li>180 frågor</li>
+              <li>230 minuter</li>
+              <li id="examOverviewScenario">Scenario- och tillämpningsfokus</li>
+              <li id="examOverviewTypes">Flera frågetyper</li>
+              <li id="examOverviewBreaks">Pauser efter del 1 och 2</li>
+            </ul>
+          </article>
+
+          <article class="card" aria-labelledby="domainDistributionTitle">
+            <h3 id="domainDistributionTitle">Domänfördelning</h3>
+            <div class="domain-bars">
+              <div class="domain-bar">
+                <div class="domain-label"><span>People</span><span>33 %</span></div>
+                <div class="bar" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" aria-label="People 33%">
+                  <div class="fill fill-people" style="width:33%"></div>
+                </div>
+              </div>
+              <div class="domain-bar">
+                <div class="domain-label"><span>Process</span><span>41 %</span></div>
+                <div class="bar" role="progressbar" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100" aria-label="Process 41%">
+                  <div class="fill fill-process" style="width:41%"></div>
+                </div>
+              </div>
+              <div class="domain-bar">
+                <div class="domain-label"><span>Business Environment</span><span>26 %</span></div>
+                <div class="bar" role="progressbar" aria-valuenow="26" aria-valuemin="0" aria-valuemax="100" aria-label="Business Environment 26%">
+                  <div class="fill fill-business" style="width:26%"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" aria-labelledby="recentResultsTitle">
+            <h3 id="recentResultsTitle">Senaste resultat</h3>
+            <div id="recentResultSummary" class="muted">Inga sparade resultat ännu.</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ── PRACTICE ───────────────────────────────────────── -->
+      <section id="view-practice" class="view" aria-labelledby="practiceTitle">
+        <div class="section-header">
+          <div>
+            <h2 id="practiceTitle">Övningsläge</h2>
+            <p id="practiceIntro" class="muted">Filtrera frågor efter domän, uppgift, tagg, svårighetsgrad och frågetyp.</p>
+          </div>
+        </div>
+
+        <div class="card filters-card">
+          <div class="filters-grid">
+            <div class="field">
+              <label for="practiceDomain" id="practiceDomainLabel">Domän</label>
+              <select id="practiceDomain" aria-labelledby="practiceDomainLabel">
+                <option value="">Alla domäner</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="practiceTask" id="practiceTaskLabel">Uppgift</label>
+              <select id="practiceTask" aria-labelledby="practiceTaskLabel">
+                <option value="">Alla uppgifter</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="practiceDifficulty" id="practiceDifficultyLabel">Svårighetsgrad</label>
+              <select id="practiceDifficulty" aria-labelledby="practiceDifficultyLabel">
+                <option value="">Alla nivåer</option>
+                <option value="easy">Enkel</option>
+                <option value="medium">Medel</option>
+                <option value="hard">Svår</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="practiceQuestionType" id="practiceTypeLabel">Frågetyp</label>
+              <select id="practiceQuestionType" aria-labelledby="practiceTypeLabel">
+                <option value="">Alla typer</option>
+                <option value="single">Enstaka svar</option>
+                <option value="multiple">Flera svar</option>
+                <option value="case">Fallstudie</option>
+                <option value="exhibit">Exhibit</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="practiceTag" id="practiceTagLabel">Tagg</label>
+              <select id="practiceTag" aria-labelledby="practiceTagLabel">
+                <option value="">Alla taggar</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="practiceCount" id="practiceCountLabel">Antal frågor</label>
+              <select id="practiceCount" aria-labelledby="practiceCountLabel">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button id="practiceGenerateBtn"    class="btn btn-primary">Starta övningssession</button>
+            <button id="practiceResetFiltersBtn" class="btn btn-ghost">Återställ filter</button>
+          </div>
+
+          <div id="practicePoolInfo" class="info-box" role="status">Ingen övningssession startad ännu.</div>
+        </div>
+
+        <div id="practiceSession" class="session-layout hidden">
+          <aside class="session-sidebar card" aria-label="Sessionsöversikt">
+            <div class="sidebar-section">
+              <h3 id="practiceSessionOverviewTitle">Sessionsöversikt</h3>
+              <div id="practiceProgressText" class="muted" aria-live="polite">Fråga 0 av 0</div>
+              <div class="progress" role="progressbar" aria-labelledby="practiceSessionOverviewTitle" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div id="practiceProgressBar" class="progress-fill" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <h3 id="practiceStatusTitle">Status</h3>
+              <div class="status-grid">
+                <div>
+                  <span class="status-label" id="practiceAnsweredLabel">Besvarade</span>
+                  <strong id="practiceAnsweredCount" aria-labelledby="practiceAnsweredLabel">0</strong>
+                </div>
+                <div>
+                  <span class="status-label" id="practiceUnansweredLabel">Obesvarade</span>
+                  <strong id="practiceUnansweredCount" aria-labelledby="practiceUnansweredLabel">0</strong>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <h3 id="practiceNavigationTitle">Navigering</h3>
+              <div id="practiceQuestionNav" class="question-nav-grid" role="list" aria-label="Frågenavigering"></div>
+            </div>
+            <div class="sidebar-section">
+              <button id="practiceFinishBtn" class="btn btn-danger full-width">Avsluta och granska</button>
+            </div>
+          </aside>
+
+          <section class="session-main" aria-label="Frågekort">
+            <div id="practiceQuestionCard" class="card question-card">
+              <div class="question-meta" aria-label="Frågemetadata">
+                <span id="practiceMetaDomain"     class="pill"></span>
+                <span id="practiceMetaTask"       class="pill"></span>
+                <span id="practiceMetaType"       class="pill"></span>
+                <span id="practiceMetaDifficulty" class="pill"></span>
+              </div>
+              <div id="practiceCaseBlock" class="case-block hidden">
+                <h3>Fallbeskrivning</h3>
+                <div id="practiceCaseText"></div>
+              </div>
+              <div id="practiceExhibitBlock" class="exhibit-block hidden">
+                <h3>Exhibit</h3>
+                <div id="practiceExhibitContent"></div>
+              </div>
+              <div class="question-header">
+                <h3 id="practiceQuestionTitle">Fråga</h3>
+                <div id="practiceQuestionInstruction" class="muted"></div>
+              </div>
+              <div id="practiceQuestionText" class="question-text"></div>
+              <div id="practiceOptions" class="options-list" role="list"></div>
+              <div class="question-actions">
+                <button id="practicePrevBtn" class="btn btn-ghost">Föregående</button>
+                <button id="practiceMarkBtn" class="btn btn-ghost">Markera</button>
+                <button id="practiceNextBtn" class="btn btn-primary">Nästa</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ── EXAM ───────────────────────────────────────────── -->
+      <section id="view-exam" class="view" aria-labelledby="examTitle">
+        <div class="section-header">
+          <div>
+            <h2 id="examTitle">PMP Simulerat prov 2026</h2>
+            <p id="examIntro" class="muted">Fullständig provsimulering med 180 frågor och 230 minuter.</p>
+          </div>
+        </div>
+
+        <div id="examSetup" class="card">
+          <div class="exam-setup-grid">
+            <div>
+              <h3 id="examSettingsTitle">Inställningar</h3>
+              <div class="field checkbox-field">
+                <label>
+                  <input type="checkbox" id="examShuffleQuestions" checked />
+                  <span id="examShuffleQuestionsLabel">Blanda frågeordning</span>
+                </label>
+              </div>
+              <div class="field checkbox-field">
+                <label>
+                  <input type="checkbox" id="examShuffleOptions" checked />
+                  <span id="examShuffleOptionsLabel">Blanda svarsalternativ</span>
+                </label>
+              </div>
+              <div class="field checkbox-field">
+                <label>
+                  <input type="checkbox" id="examEnableBreaks" checked />
+                  <span id="examEnableBreaksLabel">Visa rekommenderade pauser efter fråga 60 och 120</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <h3 id="examFormatTitle">Provformat</h3>
+              <ul class="clean-list">
+                <li>180 frågor</li>
+                <li>230 minuter</li>
+                <li id="examFormatMix">Domänmix enligt 2026 års fördelning</li>
+                <li id="examFormatTypes">Enstaka, flera, fallstudie och exhibit</li>
+              </ul>
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button id="examStartBtn" class="btn btn-primary">Starta prov</button>
+          </div>
+        </div>
+
+        <div id="examSession" class="session-layout hidden">
+          <aside class="session-sidebar card" aria-label="Provstatus">
+            <div class="sidebar-section">
+              <h3 id="examTimeRemainingTitle">Tid kvar</h3>
+              <div id="examTimer" class="timer" role="timer" aria-live="off" aria-label="Tid kvar">03:50:00</div>
+            </div>
+            <div class="sidebar-section">
+              <h3 id="examProgressTitle">Framsteg</h3>
+              <div id="examProgressText" class="muted" aria-live="polite">Fråga 0 av 180</div>
+              <div class="progress" role="progressbar" aria-labelledby="examProgressTitle" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div id="examProgressBar" class="progress-fill" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <h3 id="examStatusTitle">Status</h3>
+              <div class="status-grid">
+                <div>
+                  <span class="status-label" id="examAnsweredLabel">Besvarade</span>
+                  <strong id="examAnsweredCount" aria-labelledby="examAnsweredLabel">0</strong>
+                </div>
+                <div>
+                  <span class="status-label" id="examMarkedLabel">Markerade</span>
+                  <strong id="examMarkedCount" aria-labelledby="examMarkedLabel">0</strong>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <h3 id="examNavigationTitle">Navigering</h3>
+              <div id="examQuestionNav" class="question-nav-grid exam-nav-grid" role="list" aria-label="Frågenavigering"></div>
+            </div>
+            <div class="sidebar-section">
+              <button id="examFinishBtn" class="btn btn-danger full-width">Lämna in prov</button>
+            </div>
+          </aside>
+
+          <section class="session-main" aria-label="Provfråga">
+            <div id="examBreakNotice" class="card break-card hidden" role="alert">
+              <h3 id="examBreakTitle">Rekommenderad paus</h3>
+              <p id="examBreakText"></p>
+              <button id="examContinueAfterBreakBtn" class="btn btn-primary">Fortsätt provet</button>
+            </div>
+
+            <div id="examQuestionCard" class="card question-card">
+              <div class="question-meta" aria-label="Frågemetadata">
+                <span id="examMetaDomain"     class="pill"></span>
+                <span id="examMetaTask"       class="pill"></span>
+                <span id="examMetaType"       class="pill"></span>
+                <span id="examMetaDifficulty" class="pill"></span>
+              </div>
+              <div id="examCaseBlock" class="case-block hidden">
+                <h3>Fallbeskrivning</h3>
+                <div id="examCaseText"></div>
+              </div>
+              <div id="examExhibitBlock" class="exhibit-block hidden">
+                <h3>Exhibit</h3>
+                <div id="examExhibitContent"></div>
+              </div>
+              <div class="question-header">
+                <h3 id="examQuestionTitle">Fråga</h3>
+                <div id="examQuestionInstruction" class="muted"></div>
+              </div>
+              <div id="examQuestionText" class="question-text"></div>
+              <div id="examOptions" class="options-list" role="list"></div>
+              <div class="question-actions">
+                <button id="examPrevBtn" class="btn btn-ghost">Föregående</button>
+                <button id="examMarkBtn" class="btn btn-ghost">Markera</button>
+                <button id="examNextBtn" class="btn btn-primary">Nästa</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ── REVIEW ─────────────────────────────────────────── -->
+      <section id="view-review" class="view" aria-labelledby="reviewTitle">
+        <div class="section-header">
+          <div>
+            <h2 id="reviewTitle">Resultat och genomgång</h2>
+            <p id="reviewIntro" class="muted">Se rätta och felaktiga svar, dina svar, facit och förklaringar.</p>
+          </div>
+        </div>
+
+        <div id="reviewEmpty" class="card">
+          <p id="reviewEmptyText">Inga resultat att visa ännu. Slutför en övningssession eller ett simulerat prov först.</p>
+        </div>
+
+        <div id="reviewContent" class="hidden">
+          <div class="review-summary-grid">
+            <article class="card" aria-labelledby="reviewOverviewTitle">
+              <h3 id="reviewOverviewTitle">Översikt</h3>
+              <div class="summary-metrics">
+                <div class="metric">
+                  <div id="reviewScorePercent" class="metric-value">0 %</div>
+                  <div class="metric-label" id="reviewScoreLabel">Poäng</div>
+                </div>
+                <div class="metric">
+                  <div id="reviewCorrectCount" class="metric-value">0</div>
+                  <div class="metric-label" id="reviewCorrectLabel">Rätt</div>
+                </div>
+                <div class="metric">
+                  <div id="reviewIncorrectCount" class="metric-value">0</div>
+                  <div class="metric-label" id="reviewIncorrectLabel">Fel</div>
+                </div>
+                <div class="metric">
+                  <div id="reviewMode" class="metric-value">–</div>
+                  <div class="metric-label" id="reviewModeLabel">Läge</div>
+                </div>
+              </div>
+            </article>
+
+            <article class="card" aria-labelledby="reviewByDomainTitle">
+              <h3 id="reviewByDomainTitle">Resultat per domän</h3>
+              <div id="reviewDomainBreakdown" class="domain-breakdown"></div>
+            </article>
+          </div>
+
+          <div class="card review-toolbar">
+            <div class="filters-grid">
+              <div class="field">
+                <label for="reviewFilterStatus">Filtrera på status</label>
+                <select id="reviewFilterStatus">
+                  <option value="all">Alla</option>
+                  <option value="correct">Endast rätt</option>
+                  <option value="incorrect">Endast fel</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="reviewFilterDomain">Filtrera på domän</label>
+                <select id="reviewFilterDomain">
+                  <option value="">Alla domäner</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="reviewQuestions" class="review-list"></div>
+        </div>
+      </section>
+
+      <!-- ── ABOUT ──────────────────────────────────────────── -->
+      <section id="view-about" class="view" aria-labelledby="aboutTitle">
+        <div class="card prose">
+          <h2 id="aboutTitle">Om programmet</h2>
+          <p id="aboutP1">
+            Applikationen är byggd för strukturerad förberedelse inför PMP-provet med 2026 års format.
+            Frågorna är övningsfrågor och är inte officiella PMI-frågor.
+          </p>
+          <h3 id="aboutFilesTitle">Projektfiler</h3>
+          <ul>
+            <li id="aboutFileIndex"><code>index.html</code> – gränssnitt och struktur</li>
+            <li id="aboutFileStyles"><code>styles.css</code> – layout och design</li>
+            <li id="aboutFileApp"><code>app.js</code> – logik för frågor, prov, timer och resultat</li>
+            <li id="aboutFileData"><code>data/questions.json</code> – frågebanken</li>
+          </ul>
+          <h3 id="aboutUseTitle">Kom igång</h3>
+          <ol>
+            <li id="aboutStep1">Starta servern med <code>npm start</code>.</li>
+            <li id="aboutStep2">Öppna <code>http://localhost:3005</code> i webbläsaren.</li>
+            <li id="aboutStep3">Logga in med din registrerade e-postadress.</li>
+          </ol>
+          <h3 id="aboutNoteTitle">Notering</h3>
+          <p id="aboutNoteText">
+            Programmet är avsett för övning. För seriös certifieringsförberedelse bör frågorna kompletteras med
+            manuell kvalitetsgranskning och löpande förbättringar.
+          </p>
+        </div>
+      </section>
+
+    </main>
+  </div><!-- #app -->
+
+  <!-- Review item template -->
+  <template id="reviewItemTemplate">
+    <article class="card review-item">
+      <div class="review-item-header">
+        <div class="review-item-meta">
+          <span class="pill review-domain"></span>
+          <span class="pill review-task"></span>
+          <span class="pill review-type"></span>
+          <span class="pill review-difficulty"></span>
+        </div>
+        <div class="review-status"></div>
+      </div>
+      <div class="review-case hidden">
+        <h4>Fallbeskrivning</h4>
+        <div class="review-case-text"></div>
+      </div>
+      <div class="review-exhibit hidden">
+        <h4>Exhibit</h4>
+        <div class="review-exhibit-content"></div>
+      </div>
+      <h3 class="review-question-title"></h3>
+      <div class="review-question-text"></div>
+      <div class="review-answers">
+        <div class="answer-box">
+          <h4 id="reviewTemplateYourAnswerTitle">Ditt svar</h4>
+          <div class="review-user-answer"></div>
+        </div>
+        <div class="answer-box">
+          <h4 id="reviewTemplateCorrectAnswerTitle">Rätt svar</h4>
+          <div class="review-correct-answer"></div>
+        </div>
+      </div>
+      <div class="review-explanation">
+        <h4 id="reviewTemplateExplanationTitle">Förklaring</h4>
+        <div class="review-explanation-text"></div>
+      </div>
+    </article>
+  </template>
+
+  <!-- Login overlay -->
+  <div id="loginOverlay" class="login-overlay" role="dialog" aria-modal="true" aria-labelledby="loginHeading">
+    <div class="login-card card">
+      <div class="login-brand">
+        <img src="CANEA-Logo-2021-RGB.png" alt="CANEA" class="brand-logo" />
+        <h2 id="loginHeading">PMP Trainer 2026</h2>
+        <p class="muted" id="loginSubtitle">Ange din e-postadress för att logga in.</p>
+      </div>
+
+      <!-- Steg 1: e-postadress -->
+      <div id="loginStep1">
+        <div class="login-fields">
+          <div class="field">
+            <label for="loginEmail">E-postadress</label>
+            <input type="email" id="loginEmail" placeholder="din@email.se"
+                   autocomplete="email" inputmode="email" />
+          </div>
+          <p id="loginEmailError" class="login-error hidden" role="alert"></p>
+          <button id="loginRequestBtn" class="btn btn-primary full-width" type="button">
+            Skicka inloggningskod
+          </button>
+        </div>
+      </div>
+
+      <!-- Steg 2: OTP-kod -->
+      <div id="loginStep2" class="hidden">
+        <p id="loginOtpInfo" aria-live="polite">
+          En 6-siffrig kod har skickats till <strong id="loginEmailDisplay"></strong>.
+        </p>
+        <div class="login-fields">
+          <div class="field">
+            <label for="loginCode">Inloggningskod</label>
+            <input type="text" id="loginCode" placeholder="123456"
+                   maxlength="6" autocomplete="one-time-code" inputmode="numeric" />
+          </div>
+          <p id="loginCodeError" class="login-error hidden" role="alert"></p>
+          <button id="loginVerifyBtn" class="btn btn-primary full-width" type="button">
+            Logga in
+          </button>
+          <button id="loginBackBtn" class="btn btn-ghost full-width login-back-btn" type="button">
+            Byt e-postadress
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="translations.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
