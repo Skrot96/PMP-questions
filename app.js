@@ -1,4 +1,4 @@
-const state = {
+﻿const state = {
   rawQuestions: [],
   questions: [],
   practicePool: [],
@@ -110,278 +110,29 @@ const els = {
 
   // Language
   langSvBtn: document.getElementById("langSvBtn"),
-  langEnBtn: document.getElementById("langEnBtn")
+  langEnBtn: document.getElementById("langEnBtn"),
+
+  // Auth
+  loginOverlay:    document.getElementById("loginOverlay"),
+  loginStep1:      document.getElementById("loginStep1"),
+  loginStep2:      document.getElementById("loginStep2"),
+  loginEmail:      document.getElementById("loginEmail"),
+  loginEmailError: document.getElementById("loginEmailError"),
+  loginRequestBtn: document.getElementById("loginRequestBtn"),
+  loginCode:          document.getElementById("loginCode"),
+  loginCodeError:     document.getElementById("loginCodeError"),
+  loginVerifyBtn:     document.getElementById("loginVerifyBtn"),
+  loginBackBtn:       document.getElementById("loginBackBtn"),
+  loginEmailDisplay:  document.getElementById("loginEmailDisplay"),
+  userInfo:  document.getElementById("userInfo"),
+  userEmail: document.getElementById("userEmail"),
+  logoutBtn: document.getElementById("logoutBtn"),
 };
 
 
-const TRANSLATIONS = {
-  en: {
-    appTitle: "PMP Trainer 2026",
-    metaDescription: "PMP Trainer 2026 - practice questions and a simulated exam aligned with the PMP exam from July 9, 2026.",
-    subtitle: "Practice questions and a simulated exam aligned with the new PMP exam from July 9, 2026",
-    badgeQuestions: "180 questions",
-    badgeMinutes: "230 minutes",
-    badgeScenario: "Scenario-focused",
-    navHome: "Home",
-    navPractice: "Practice",
-    navExam: "Mock Exam",
-    navReview: "Results",
-    navAbout: "About",
-    heroTitle: "Practice systematically for PMP 2026",
-    heroText: "Choose between targeted topic practice and a full exam simulation. Questions are organized by domain, task, difficulty, and question type.",
-    startPractice: "Start Practice",
-    startExam: "Start Mock Exam",
-    statsQuestions: "Questions in the bank",
-    statsDomains: "Domains",
-    statsTasks: "Tasks",
-    statsExamFormat: "Exam format",
-    examOverview: "Exam Overview",
-    examOverviewScenario: "Scenario and application focus",
-    examOverviewTypes: "Multiple question types",
-    examOverviewBreaks: "Breaks after sections 1 and 2",
-    domainDistribution: "Domain Distribution",
-    recentResults: "Recent Results",
-    noSavedResults: "No saved results yet.",
-    practiceTitle: "Practice Mode",
-    practiceIntro: "Filter questions by domain, task, tag, difficulty, and question type.",
-    labelDomain: "Domain",
-    allDomains: "All domains",
-    labelTask: "Task",
-    allTasks: "All tasks",
-    labelDifficulty: "Difficulty",
-    allLevels: "All levels",
-    diffEasy: "Easy",
-    diffMedium: "Medium",
-    diffHard: "Hard",
-    labelQuestionType: "Question type",
-    allTypes: "All types",
-    typeSingle: "Single response",
-    typeMultiple: "Multiple response",
-    typeCase: "Case set",
-    typeExhibit: "Exhibit",
-    labelTag: "Tag",
-    allTags: "All tags",
-    labelQuestionCount: "Number of questions",
-    generatePractice: "Start Practice Session",
-    resetFilters: "Reset Filters",
-    noPracticeStarted: "No practice session started yet.",
-    sessionOverview: "Session Overview",
-    status: "Status",
-    answered: "Answered",
-    unanswered: "Unanswered",
-    navigation: "Navigation",
-    finishAndReview: "Finish and Review",
-    prev: "Previous",
-    next: "Next",
-    mark: "Mark",
-    unmark: "Unmark",
-    mockExamTitle: "PMP Mock Exam 2026",
-    mockExamIntro: "A full exam simulation with 180 questions and 230 minutes.",
-    settings: "Settings",
-    shuffleQuestions: "Shuffle question order",
-    shuffleOptions: "Shuffle answer options",
-    enableBreaks: "Show recommended breaks after questions 60 and 120",
-    examFormat: "Exam format",
-    examFormatMix: "Domain mix aligned with the 2026 distribution",
-    examFormatTypes: "Single, multiple, case, and exhibit",
-    startExamAction: "Start Exam",
-    timeRemaining: "Time Remaining",
-    progress: "Progress",
-    marked: "Marked",
-    submitExam: "Submit Exam",
-    recommendedBreak: "Recommended Break",
-    continueExam: "Continue Exam",
-    reviewTitle: "Results and Review",
-    reviewIntro: "See correct and incorrect answers, your responses, the answer key, and explanations.",
-    noResultYet: "No results to show yet. Complete a practice session or a mock exam first.",
-    overview: "Overview",
-    score: "Score",
-    correct: "Correct",
-    incorrect: "Incorrect",
-    mode: "Mode",
-    byDomain: "Results by Domain",
-    filterStatus: "Filter by status",
-    filterDomain: "Filter by domain",
-    all: "All",
-    onlyCorrect: "Correct only",
-    onlyIncorrect: "Incorrect only",
-    aboutTitle: "About the Program",
-    aboutP1: "This application is built to provide structured preparation for the PMP exam using the 2026 format. The questions are practice questions and are not official PMI questions.",
-    aboutFiles: "Project Files",
-    aboutUse: "How to Use the Program",
-    aboutNote: "Note",
-    aboutNoteText: "This program is designed for practice. For serious certification preparation, the questions should be supplemented with manual quality review and ongoing improvements.",
-    fileIndex: "interface and structure",
-    fileStyles: "layout and visual design",
-    fileApp: "logic for questions, exams, timer, and results",
-    fileData: "question bank",
-    step1: "Place all files in the same project folder.",
-    step2: "Put questions.json in the data subfolder.",
-    step3: "Open index.html in a web browser.",
-    step4: "If the browser blocks local JSON loading, run the project through a simple local server.",
-    yourAnswer: "Your answer",
-    correctAnswer: "Correct answer",
-    explanation: "Explanation",
-    question: "Question",
-    recentScore: "Score",
-    recentCorrect: "Correct",
-    of: "of",
-    poolNoMatch: "No questions match the current filters.",
-    poolMatch: "{count} questions match the filters. The session will use up to {selected} questions.",
-    noMatchingQuestions: "There are no questions matching the selected filters.",
-    emptyQuestionBank: "The question bank is empty.",
-    progressQuestion: "Question {current} of {total}",
-    reviewQuestionTitle: "{index}. Question",
-    reviewNoExplanation: "No explanation available.",
-    noAnswer: "No answer",
-    chooseAll: "Select all options that apply.",
-    chooseBest: "Select the best answer.",
-    breakNotice: "You have now completed question {question}. This is a recommended break before you continue.",
-    loadError: "Could not load the question bank. Make sure questions.json exists in data/questions.json or in the same folder as index.html.",
-    saveResultError: "Could not save the latest result locally.",
-    restoreResultError: "Could not read the latest result locally.",
-    unknown: "Unknown",
-    modePractice: "Practice Mode",
-    modeExam: "Mock Exam",
-    typeLabelSingle: "Single",
-    typeLabelMultiple: "Multiple",
-    typeLabelCase: "Case",
-    typeLabelExhibit: "Exhibit"
-  },
-  sv: {
-    appTitle: "PMP Trainer 2026",
-    metaDescription: "PMP Trainer 2026 - övningsfrågor och simulerat prov enligt PMP-examen från 9 juli 2026.",
-    subtitle: "Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026",
-    badgeQuestions: "180 frågor",
-    badgeMinutes: "230 minuter",
-    badgeScenario: "Scenariofokus",
-    navHome: "Start",
-    navPractice: "Övningsläge",
-    navExam: "Simulerat prov",
-    navReview: "Resultat",
-    navAbout: "Om",
-    heroTitle: "Träna strukturerat inför PMP 2026",
-    heroText: "Välj mellan riktad ämnesträning och fullständig examenssimulering. Frågorna är organiserade efter domän, task, svårighetsgrad och frågetyp.",
-    startPractice: "Starta övningsläge",
-    startExam: "Starta simulerat prov",
-    statsQuestions: "Frågor i databasen",
-    statsDomains: "Domäner",
-    statsTasks: "Tasks",
-    statsExamFormat: "Examformat",
-    examOverview: "Examensupplägg",
-    examOverviewScenario: "Scenario- och tillämpningsfokus",
-    examOverviewTypes: "Flera frågetyper",
-    examOverviewBreaks: "Pauser efter block 1 och 2",
-    domainDistribution: "Domänfördelning",
-    recentResults: "Senaste resultat",
-    noSavedResults: "Inga sparade resultat ännu.",
-    practiceTitle: "Övningsläge",
-    practiceIntro: "Filtrera frågor efter domän, task, tagg, svårighetsgrad och frågetyp.",
-    labelDomain: "Domän",
-    allDomains: "Alla domäner",
-    labelTask: "Task",
-    allTasks: "Alla tasks",
-    labelDifficulty: "Svårighetsgrad",
-    allLevels: "Alla nivåer",
-    diffEasy: "Lätt",
-    diffMedium: "Medel",
-    diffHard: "Svår",
-    labelQuestionType: "Frågetyp",
-    allTypes: "Alla typer",
-    typeSingle: "Single response",
-    typeMultiple: "Multiple response",
-    typeCase: "Case set",
-    typeExhibit: "Exhibit",
-    labelTag: "Tagg",
-    allTags: "Alla taggar",
-    labelQuestionCount: "Antal frågor",
-    generatePractice: "Starta övningspass",
-    resetFilters: "Återställ filter",
-    noPracticeStarted: "Ingen frågesession startad ännu.",
-    sessionOverview: "Passöversikt",
-    status: "Status",
-    answered: "Besvarade",
-    unanswered: "Ej besvarade",
-    navigation: "Navigering",
-    finishAndReview: "Avsluta och rätta",
-    prev: "Föregående",
-    next: "Nästa",
-    mark: "Markera",
-    unmark: "Avmarkera",
-    mockExamTitle: "Simulerat PMP-prov 2026",
-    mockExamIntro: "Fullständig examsimulering med 180 frågor och 230 minuter.",
-    settings: "Inställningar",
-    shuffleQuestions: "Blanda frågornas ordning",
-    shuffleOptions: "Blanda svarsalternativ",
-    enableBreaks: "Visa rekommenderade pauser efter fråga 60 och 120",
-    examFormat: "Provformat",
-    examFormatMix: "Domänmix enligt 2026-fördelning",
-    examFormatTypes: "Single, multiple, case och exhibit",
-    startExamAction: "Starta prov",
-    timeRemaining: "Tid kvar",
-    progress: "Framsteg",
-    marked: "Markerade",
-    submitExam: "Lämna in prov",
-    recommendedBreak: "Rekommenderad paus",
-    continueExam: "Fortsätt provet",
-    reviewTitle: "Resultat och genomgång",
-    reviewIntro: "Se rätt/fel, egna svar, facit och förklaringar.",
-    noResultYet: "Inget resultat att visa ännu. Genomför först ett övningspass eller ett simulerat prov.",
-    overview: "Översikt",
-    score: "Resultat",
-    correct: "Rätt",
-    incorrect: "Fel",
-    mode: "Läge",
-    byDomain: "Resultat per domän",
-    filterStatus: "Filtrera status",
-    filterDomain: "Filtrera domän",
-    all: "Alla",
-    onlyCorrect: "Endast rätt",
-    onlyIncorrect: "Endast fel",
-    aboutTitle: "Om programmet",
-    aboutP1: "Den här applikationen är byggd för att ge strukturerad träning inför PMP-examen enligt 2026 års upplägg. Frågorna är träningsfrågor och inte officiella PMI-frågor.",
-    aboutFiles: "Filer i projektet",
-    aboutUse: "Så används programmet",
-    aboutNote: "Obs",
-    aboutNoteText: "Programmet är gjort för träning. För skarp certifieringsförberedelse bör frågorna kompletteras med manuell kvalitetsgranskning och återkommande förbättringar.",
-    fileIndex: "gränssnitt och struktur",
-    fileStyles: "layout och visuell design",
-    fileApp: "logik för frågor, prov, timer och resultat",
-    fileData: "frågebanken",
-    step1: "Placera alla filer i samma projektmapp.",
-    step2: "Lägg questions.json i undermappen data.",
-    step3: "Öppna index.html i en webbläsare.",
-    step4: "Om webbläsaren blockerar lokal JSON-läsning, kör projektet via en enkel lokal server.",
-    yourAnswer: "Ditt svar",
-    correctAnswer: "Rätt svar",
-    explanation: "Förklaring",
-    question: "Fråga",
-    recentScore: "Resultat",
-    recentCorrect: "Rätt",
-    of: "av",
-    poolNoMatch: "Inga frågor matchar nuvarande filter.",
-    poolMatch: "{count} frågor matchar filtren. Passet kommer att använda upp till {selected} frågor.",
-    noMatchingQuestions: "Det finns inga frågor som matchar filtren.",
-    emptyQuestionBank: "Frågebanken är tom.",
-    progressQuestion: "Fråga {current} av {total}",
-    reviewQuestionTitle: "{index}. Fråga",
-    reviewNoExplanation: "Ingen förklaring tillgänglig.",
-    noAnswer: "Inget svar",
-    chooseAll: "Välj alla alternativ som är korrekta.",
-    chooseBest: "Välj det bästa svaret.",
-    breakNotice: "Du har nu passerat fråga {question}. Det här är en rekommenderad paus innan du fortsätter.",
-    loadError: "Kunde inte läsa frågebanken. Kontrollera att questions.json finns i data/questions.json eller i samma mapp som index.html.",
-    saveResultError: "Kunde inte spara senaste resultat lokalt.",
-    restoreResultError: "Kunde inte läsa senaste resultat lokalt.",
-    unknown: "Okänd",
-    modePractice: "Övningsläge",
-    modeExam: "Simulerat prov",
-    typeLabelSingle: "Single",
-    typeLabelMultiple: "Multiple",
-    typeLabelCase: "Case",
-    typeLabelExhibit: "Exhibit"
-  }
-};
+// Translations loaded from translations.js
+const TRANSLATIONS = window.TRANSLATIONS;
+
 
 function t(key, vars = {}) {
   const bundle = TRANSLATIONS[state.language] || TRANSLATIONS.en;
@@ -560,8 +311,16 @@ function applyTranslations() {
     reviewStatusOptions[2].textContent = t("onlyIncorrect");
   }
 
-  if (els.langSvBtn) els.langSvBtn.classList.toggle("active", state.language === "sv");
-  if (els.langEnBtn) els.langEnBtn.classList.toggle("active", state.language === "en");
+  const isSv = state.language === "sv";
+  if (els.langSvBtn) {
+    els.langSvBtn.classList.toggle("active", isSv);
+    els.langSvBtn.setAttribute("aria-pressed", String(isSv));
+  }
+  if (els.langEnBtn) {
+    els.langEnBtn.classList.toggle("active", !isSv);
+    els.langEnBtn.setAttribute("aria-pressed", String(!isSv));
+  }
+  document.documentElement.lang = state.language;
 }
 
 function modeLabel(modeKey) {
@@ -569,7 +328,161 @@ function modeLabel(modeKey) {
 }
 
 
-document.addEventListener("DOMContentLoaded", init);
+// â”€â”€ Authentication â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+const AUTH_TOKEN_KEY = "pmpTrainerToken";
+
+const auth = {
+  token: null,
+  email: null,
+};
+
+async function apiFetch(url, options = {}) {
+  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+  if (auth.token) headers["Authorization"] = `Bearer ${auth.token}`;
+  const res = await fetch(url, { ...options, headers });
+  const data = await res.json().catch(() => ({}));
+  return { ok: res.ok, status: res.status, data };
+}
+
+function showLoginStep(step) {
+  els.loginStep1.classList.toggle("hidden", step !== 1);
+  els.loginStep2.classList.toggle("hidden", step !== 2);
+  els.loginEmailError.classList.add("hidden");
+  els.loginCodeError.classList.add("hidden");
+}
+
+function setLoginError(el, msg) {
+  el.textContent = msg;
+  el.classList.toggle("hidden", !msg);
+}
+
+async function checkAuth() {
+  const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+  if (!stored) return false;
+
+  auth.token = stored;
+  const { ok, data } = await apiFetch("/api/auth/me");
+  if (!ok) {
+    auth.token = null;
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    return false;
+  }
+
+  auth.email = data.email;
+  return true;
+}
+
+function showApp() {
+  els.loginOverlay.classList.add("hidden");
+  if (els.userInfo)  els.userInfo.classList.remove("hidden");
+  if (els.userEmail) els.userEmail.textContent = auth.email || "";
+}
+
+function showLoginOverlay() {
+  els.loginOverlay.classList.remove("hidden");
+  if (els.userInfo) els.userInfo.classList.add("hidden");
+  showLoginStep(1);
+  els.loginEmail.value = "";
+  els.loginCode.value  = "";
+}
+
+async function handleRequestOTP() {
+  const email = els.loginEmail.value.trim();
+  setLoginError(els.loginEmailError, "");
+
+  if (!email) {
+    setLoginError(els.loginEmailError, "Ange din e-postadress.");
+    return;
+  }
+
+  els.loginRequestBtn.disabled = true;
+  els.loginRequestBtn.textContent = "Skickar…";
+
+  const { ok, data } = await apiFetch("/api/auth/request-otp", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+
+  els.loginRequestBtn.disabled = false;
+  els.loginRequestBtn.textContent = "Skicka inloggningskod";
+
+  if (!ok) {
+    setLoginError(els.loginEmailError, data.error || "NÃ¥got gick fel. FÃ¶rsÃ¶k igen.");
+    return;
+  }
+
+  if (els.loginEmailDisplay) els.loginEmailDisplay.textContent = email;
+  showLoginStep(2);
+  els.loginCode.focus();
+}
+
+async function handleVerifyOTP() {
+  const email = els.loginEmail.value.trim();
+  const code  = els.loginCode.value.trim();
+  setLoginError(els.loginCodeError, "");
+
+  if (!code) {
+    setLoginError(els.loginCodeError, "Ange den 6-siffriga koden.");
+    return;
+  }
+
+  els.loginVerifyBtn.disabled = true;
+  els.loginVerifyBtn.textContent = "Verifierar…";
+
+  const { ok, data } = await apiFetch("/api/auth/verify-otp", {
+    method: "POST",
+    body: JSON.stringify({ email, code }),
+  });
+
+  els.loginVerifyBtn.disabled = false;
+  els.loginVerifyBtn.textContent = "Logga in";
+
+  if (!ok) {
+    setLoginError(els.loginCodeError, data.error || "Ogiltig kod. FÃ¶rsÃ¶k igen.");
+    return;
+  }
+
+  auth.token = data.token;
+  auth.email = data.email;
+  localStorage.setItem(AUTH_TOKEN_KEY, auth.token);
+
+  showApp();
+  init();
+}
+
+async function handleLogout() {
+  await apiFetch("/api/auth/logout", { method: "POST" });
+  auth.token = null;
+  auth.email = null;
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  showLoginOverlay();
+}
+
+function bindAuthEvents() {
+  els.loginRequestBtn?.addEventListener("click", handleRequestOTP);
+  els.loginVerifyBtn?.addEventListener("click", handleVerifyOTP);
+  els.loginBackBtn?.addEventListener("click", () => showLoginStep(1));
+  els.logoutBtn?.addEventListener("click", handleLogout);
+
+  els.loginEmail?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") handleRequestOTP();
+  });
+  els.loginCode?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") handleVerifyOTP();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  bindAuthEvents();
+  const authenticated = await checkAuth();
+  if (authenticated) {
+    showApp();
+    init();
+  } else {
+    showLoginOverlay();
+  }
+});
 
 async function init() {
   state.language = getStoredLanguage();
@@ -659,7 +572,8 @@ async function loadQuestions() {
 function normalizeQuestion(q, index) {
   if (!q || typeof q !== "object") return null;
 
-  const options = normalizeOptions(q.options || []);
+  const rawOptions = Array.isArray(q.options) ? q.options : [];
+  const options = normalizeOptions(rawOptions);
   const normalizedType = normalizeQuestionType(q.type, options);
   const normalizedOptions =
     (normalizedType === "case" || normalizedType === "exhibit") && options.length === 0
@@ -681,8 +595,8 @@ function normalizeQuestion(q, index) {
     options: normalizedOptions,
     correctAnswers,
     explanation: q.explanation || "",
-    caseText: q.caseText || q.case || "",
-    exhibitContent: q.exhibitContent || q.exhibit || ""
+    caseText: q.caseText ?? q.case ?? "",
+    exhibitContent: q.exhibitContent ?? q.exhibit ?? ""
   };
 }
 
@@ -697,9 +611,9 @@ function normalizeQuestionType(type, options) {
 
 function normalizeDifficulty(value) {
   const map = {
-    "lätt": "easy",
+    "lÃ¤tt": "easy",
     "medel": "medium",
-    "svår": "hard",
+    "svÃ¥r": "hard",
     "easy": "easy",
     "medium": "medium",
     "hard": "hard"
@@ -826,7 +740,7 @@ function uniqueSorted(values) {
 }
 
 function formatTaskLabel(question) {
-  return question.taskCode ? `${question.taskCode} — ${question.task}` : question.task;
+  return question.taskCode ? `${question.taskCode} – ${question.task}` : question.task;
 }
 
 function getPracticeFilteredQuestions() {

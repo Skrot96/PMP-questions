@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adminpanel – PMP Trainer 2026</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Admin-specific additions ── */
+    .admin-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+      flex-wrap: wrap;
+    }
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .admin-brand h1 {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .admin-brand .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      color: var(--warning);
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .admin-main { padding: 28px 0 64px; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .toolbar h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .empty-state {
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    /* login panel */
+    .admin-login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--bg);
+    }
+    .admin-login-card {
+      width: 100%;
+      max-width: 380px;
+    }
+    .admin-login-card h2 {
+      margin: 0 0 4px;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+    .admin-login-card .sub {
+      margin: 0 0 24px;
+      color: var(--text-muted);
+      font-size: .9375rem;
+    }
+    .admin-login-fields { display: grid; gap: 14px; }
+
+    /* notification toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 400;
+      padding: 12px 18px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: .9375rem;
+      box-shadow: var(--shadow-md);
+      transition: opacity .2s;
+    }
+    #toast.success { background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success); }
+    #toast.error   { background: var(--error-bg);   border: 1px solid var(--error-border);   color: var(--error); }
+    #toast.hidden  { display: none; }
+
+    /* ── Tabs ── */
+    .admin-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--border);
+    }
+    .tab-btn {
+      padding: 10px 22px;
+      border: none;
+      background: none;
+      font-size: .9375rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      border-radius: 0;
+      transition: color .15s, border-color .15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-panel { }
+
+    /* ── Question filters & pagination ── */
+    .q-filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      align-items: flex-end;
+    }
+    .q-filters .field { margin: 0; flex: 1; min-width: 140px; }
+    .q-filters .field.q-search { flex: 2; min-width: 220px; }
+    .q-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      font-size: .875rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .q-pager { display: flex; gap: 6px; align-items: center; }
+
+    /* ── Question modal ── */
+    .modal-lg { max-width: 740px; width: 95vw; }
+    .modal-lg .modal-fields { max-height: 68vh; overflow-y: auto; padding-right: 6px; }
+    .modal-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .options-list { display: grid; gap: 8px; margin-top: 8px; }
+    .option-row { display: flex; align-items: center; gap: 8px; }
+    .option-row .option-letter {
+      font-weight: 700; min-width: 20px; font-size: .875rem;
+      color: var(--text-muted); flex-shrink: 0;
+    }
+    .option-row input[type="text"] { flex: 1; min-width: 0; }
+    .option-correct-label {
+      display: flex; align-items: center; gap: 5px;
+      font-size: .875rem; color: var(--text-muted);
+      white-space: nowrap; cursor: pointer; flex-shrink: 0;
+    }
+    .option-correct-label input { cursor: pointer; }
+    .add-option-btn { margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <a href="#admin-main" class="skip-link">Hoppa till innehållet</a>
+
+  <!-- ── Login-skärm ──────────────────────────────────────── -->
+  <div id="loginScreen" class="admin-login-wrap">
+    <div class="admin-login-card card">
+      <img src="CANEA-Logo-2021-RGB.png" alt="CANEA" class="brand-logo" style="height:32px;margin-bottom:16px" />
+      <h2>Adminpanel</h2>
+      <p class="sub">PMP Trainer 2026 – Användarhantering</p>
+      <div class="admin-login-fields">
+        <div class="field">
+          <label for="adminToken">Adminlösenord</label>
+          <input type="password" id="adminToken" placeholder="••••••••"
+                 autocomplete="current-password" />
+        </div>
+        <p id="loginError" class="login-error hidden" role="alert"></p>
+        <button id="loginBtn" class="btn btn-primary full-width" type="button">Logga in</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Admin-gränssnitt ─────────────────────────────────── -->
+  <div id="adminApp" class="hidden">
+    <header class="admin-header" role="banner">
+      <div class="container admin-header-inner">
+        <div class="admin-brand">
+          <img src="CANEA-Logo-2021-RGB.png" alt="CANEA" class="brand-logo" style="height:32px" />
+          <h1>PMP Trainer 2026</h1>
+          <span class="tag">Admin</span>
+        </div>
+        <button id="adminLogoutBtn" class="btn btn-ghost btn-sm" type="button">Logga ut</button>
+      </div>
+    </header>
+
+    <main id="admin-main" class="admin-main" aria-label="Administration">
+      <div class="container">
+
+        <!-- Tab navigation -->
+        <nav class="admin-tabs" aria-label="Administrationsflikar">
+          <button class="tab-btn active" data-tab="users" type="button">Användare</button>
+          <button class="tab-btn" data-tab="questions" type="button">Frågor</button>
+        </nav>
+
+        <!-- ── Users tab ── -->
+        <div id="tab-users" class="tab-panel">
+          <div class="toolbar">
+            <div>
+              <h2>Registrerade användare</h2>
+              <p class="muted" style="margin:2px 0 0;font-size:.9375rem">
+                Endast registrerade användare med giltigt kursdatum kan logga in.
+              </p>
+            </div>
+            <button id="openAddUserBtn" class="btn btn-primary" type="button">
+              + Lägg till användare
+            </button>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="table-wrap">
+              <table aria-label="Användartabell">
+                <thead>
+                  <tr>
+                    <th scope="col">Namn</th>
+                    <th scope="col">E-postadress</th>
+                    <th scope="col">Kursdatum</th>
+                    <th scope="col">Åtkomst giltig till</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"><span class="sr-only">Åtgärder</span></th>
+                  </tr>
+                </thead>
+                <tbody id="userTableBody">
+                  <tr>
+                    <td colspan="6" class="empty-state">Laddar…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Questions tab ── -->
+        <div id="tab-questions" class="tab-panel hidden">
+          <div class="toolbar">
+            <div>
+              <h2>Frågor</h2>
+              <p class="muted" style="margin:2px 0 0;font-size:.9375rem">
+                Lägg till, redigera och ta bort frågor i träningsdatabasen.
+              </p>
+            </div>
+            <button id="openAddQuestionBtn" class="btn btn-primary" type="button">
+              + Lägg till fråga
+            </button>
+          </div>
+
+          <div class="q-filters">
+            <div class="field q-search">
+              <label for="qSearch">Sök</label>
+              <input type="search" id="qSearch" placeholder="Sök på ID eller frågetext…" />
+            </div>
+            <div class="field">
+              <label for="qFilterDomain">Domän</label>
+              <select id="qFilterDomain">
+                <option value="">Alla domäner</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="qFilterDifficulty">Svårighetsgrad</label>
+              <select id="qFilterDifficulty">
+                <option value="">Alla nivåer</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="qFilterType">Typ</label>
+              <select id="qFilterType">
+                <option value="">Alla typer</option>
+                <option value="single">Single</option>
+                <option value="multiple">Multiple</option>
+                <option value="case">Case</option>
+                <option value="exhibit">Exhibit</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="table-wrap">
+              <table aria-label="Frågetabell">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Domän</th>
+                    <th scope="col">Typ</th>
+                    <th scope="col">Svårighet</th>
+                    <th scope="col">Fråga</th>
+                    <th scope="col"><span class="sr-only">Åtgärder</span></th>
+                  </tr>
+                </thead>
+                <tbody id="questionTableBody">
+                  <tr><td colspan="6" class="empty-state">Välj fliken Frågor för att ladda.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="q-pagination">
+              <span id="qPaginationInfo"></span>
+              <div class="q-pager">
+                <button class="btn btn-ghost btn-sm" id="qPrevBtn" type="button">‹ Föregående</button>
+                <button class="btn btn-ghost btn-sm" id="qNextBtn" type="button">Nästa ›</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ── Modal: Lägg till / redigera ─────────────────────── -->
+  <div id="userModal" class="modal-backdrop hidden" role="dialog"
+       aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Lägg till användare</h2>
+        <button class="modal-close" id="modalCloseBtn" type="button" aria-label="Stäng">×</button>
+      </div>
+      <div class="modal-fields">
+        <div class="field">
+          <label for="fieldName">Fullständigt namn</label>
+          <input type="text" id="fieldName" placeholder="Anna Andersson" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="fieldEmail">E-postadress</label>
+          <input type="email" id="fieldEmail" placeholder="anna@foretag.se" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="fieldCourseDate">Kursdatum</label>
+          <input type="date" id="fieldCourseDate" />
+          <small style="color:var(--text-muted);margin-top:4px;display:block">
+            Åtkomst är giltig i 12 månader från kursdatum.
+          </small>
+        </div>
+        <p id="modalError" class="login-error hidden" role="alert"></p>
+      </div>
+      <div class="modal-actions">
+        <button id="modalCancelBtn" class="btn btn-ghost" type="button">Avbryt</button>
+        <button id="modalSaveBtn"   class="btn btn-primary" type="button">Spara</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Fråga ──────────────────────────────────────────────────────── -->
+  <div id="questionModal" class="modal-backdrop hidden" role="dialog"
+       aria-modal="true" aria-labelledby="qModalTitle">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h2 id="qModalTitle">Lägg till fråga</h2>
+        <button class="modal-close" id="qModalCloseBtn" type="button" aria-label="Stäng">×</button>
+      </div>
+      <div class="modal-fields">
+        <div class="modal-grid-2">
+          <div class="field">
+            <label for="qFieldId">ID <span style="color:var(--error)">*</span></label>
+            <input type="text" id="qFieldId" placeholder="t.ex. P1-999" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="qFieldDomain">Domän</label>
+            <input type="text" id="qFieldDomain" placeholder="t.ex. People" list="domainDatalist" autocomplete="off" />
+            <datalist id="domainDatalist"></datalist>
+          </div>
+          <div class="field">
+            <label for="qFieldTaskCode">Task Code</label>
+            <input type="text" id="qFieldTaskCode" placeholder="t.ex. P1" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="qFieldTask">Task</label>
+            <input type="text" id="qFieldTask" placeholder="t.ex. Develop a common vision" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="qFieldDifficulty">Svårighetsgrad</label>
+            <select id="qFieldDifficulty">
+              <option value="Easy">Easy</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="qFieldType">Typ</label>
+            <select id="qFieldType">
+              <option value="single">Single</option>
+              <option value="multiple">Multiple</option>
+              <option value="case">Case</option>
+              <option value="exhibit">Exhibit</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:14px">
+          <label for="qFieldTags">Taggar (kommaseparerade)</label>
+          <input type="text" id="qFieldTags" placeholder="t.ex. vision, stakeholders, agile" autocomplete="off" />
+        </div>
+
+        <div class="field" style="margin-top:14px">
+          <label for="qFieldQuestion">Fråga <span style="color:var(--error)">*</span></label>
+          <textarea id="qFieldQuestion" rows="4" placeholder="Frågetext…"></textarea>
+        </div>
+
+        <div id="qCaseBlock" class="field hidden" style="margin-top:14px">
+          <label for="qFieldCaseText">Case-text</label>
+          <textarea id="qFieldCaseText" rows="3" placeholder="Bakgrundstext till case-frågan…"></textarea>
+        </div>
+
+        <div id="qExhibitBlock" class="field hidden" style="margin-top:14px">
+          <label for="qFieldExhibit">Exhibit-innehåll</label>
+          <textarea id="qFieldExhibit" rows="3" placeholder="Exhibit-innehåll (tabell, diagram etc.)…"></textarea>
+        </div>
+
+        <div style="margin-top:14px">
+          <label>Svarsalternativ <small style="color:var(--text-muted);font-weight:400">(markera rätt svar)</small></label>
+          <div id="qOptionsList" class="options-list"></div>
+          <button type="button" class="btn btn-ghost btn-sm add-option-btn" id="qAddOptionBtn">+ Lägg till alternativ</button>
+        </div>
+
+        <div class="field" style="margin-top:14px">
+          <label for="qFieldExplanation">Förklaring</label>
+          <textarea id="qFieldExplanation" rows="4" placeholder="Förklaring av rätt svar…"></textarea>
+        </div>
+
+        <p id="qModalError" class="login-error hidden" role="alert" style="margin-top:12px"></p>
+      </div>
+      <div class="modal-actions">
+        <button id="qModalCancelBtn" class="btn btn-ghost" type="button">Avbryt</button>
+        <button id="qModalSaveBtn" class="btn btn-primary" type="button">Spara</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast ────────────────────────────────────────────── -->
+  <div id="toast" class="hidden" role="status" aria-live="polite"></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
