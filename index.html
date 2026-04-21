@@ -95,8 +95,8 @@
           <article class="card">
             <h3 id="examOverviewTitle">Exam Overview</h3>
             <ul class="clean-list">
-              <li>185 frågor</li>
-              <li>240 minuter</li>
+              <li id="examOverviewQuestionCount">185 frågor</li>
+              <li id="examOverviewDuration">240 minuter</li>
               <li id="examOverviewScenario">Scenario and application focus</li>
               <li id="examOverviewTypes">Multiple question types</li>
               <li id="examOverviewBreaks">Breaks after sections 1 and 2</li>
@@ -231,10 +231,10 @@
             </div>
 
             <div class="sidebar-section">
-              <h3 id="practiceStatusTitle">Status</h3>
+              <h3 id="examStatusTitle">Status</h3>
               <div class="status-grid">
                 <div>
-                  <span class="status-label" id="practiceAnsweredLabel">Answered</span>
+                  <span class="status-label" id="examAnsweredLabel">Answered</span>
                   <strong id="practiceAnsweredCount">0</strong>
                 </div>
                 <div>
@@ -245,7 +245,7 @@
             </div>
 
             <div class="sidebar-section">
-              <h3 id="practiceNavigationTitle">Navigation</h3>
+              <h3 id="examNavigationTitle">Navigation</h3>
               <div id="practiceQuestionNav" class="question-nav-grid"></div>
             </div>
 
@@ -323,7 +323,7 @@
               <div class="field checkbox-field">
                 <label id="examEnableBreaksLabel">
                   <input type="checkbox" id="examEnableBreaks" checked />
-                  Show recommended breaks after questions 60 and 120
+                  Show recommended breaks after questions 62 and 124
                 </label>
               </div>
             </div>
@@ -331,10 +331,11 @@
             <div>
               <h3 id="examFormatTitle">Exam format</h3>
               <ul class="clean-list">
-                <li>185 frågor</li>
-                <li>240 minuter</li>
+                <li id="examFormatQuestionCount">185 frågor</li>
+                <li id="examFormatDuration">240 minuter</li>
                 <li id="examFormatMix">Domain mix aligned with the 2026 distribution</li>
                 <li id="examFormatTypes">Single, multiple, case, and exhibit</li>
+                <li id="examFormatGuaranteedMix">Target mix: up to 6 case and 4 exhibit questions when available</li>
               </ul>
             </div>
           </div>
@@ -350,12 +351,12 @@
           <aside class="session-sidebar card">
             <div class="sidebar-section">
               <h3 id="examTimeRemainingTitle">Time Remaining</h3>
-              <div id="examTimer" class="timer">03:50:00</div>
+              <div id="examTimer" class="timer">04:00:00</div>
             </div>
 
             <div class="sidebar-section">
               <h3 id="examProgressTitle">Progress</h3>
-              <div id="examProgressText" class="muted">Fråga 0 av 185</div>
+              <div id="examProgressText" class="muted">Fråga 0 av 180</div>
               <div class="progress">
                 <div id="examProgressBar" class="progress-fill" style="width: 0%"></div>
               </div>

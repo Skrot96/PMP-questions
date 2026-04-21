@@ -13,6 +13,16 @@ const state = {
 
 const VIEW_IDS = ["home", "practice", "exam", "review", "about"];
 
+const EXAM_CONFIG = {
+  questionCount: 185,
+  durationMinutes: 240,
+  breakpoints: [62, 124],
+  formatTargets: {
+    case: 6,
+    exhibit: 4
+  }
+};
+
 const els = {
   navButtons: Array.from(document.querySelectorAll(".nav-btn")),
   views: Object.fromEntries(
@@ -119,8 +129,8 @@ const TRANSLATIONS = {
     appTitle: "PMP Trainer 2026",
     metaDescription: "PMP Trainer 2026 - practice questions and a simulated exam aligned with the PMP exam from July 9, 2026.",
     subtitle: "Practice questions and a simulated exam aligned with the new PMP exam from July 9, 2026",
-    badgeQuestions: "185 questions",
-    badgeMinutes: "240 minutes",
+    badgeQuestions: "{count} questions",
+    badgeMinutes: "{minutes} minutes",
     badgeScenario: "Scenario-focused",
     navHome: "Home",
     navPractice: "Practice",
@@ -136,6 +146,8 @@ const TRANSLATIONS = {
     statsTasks: "Tasks",
     statsExamFormat: "Exam format",
     examOverview: "Exam Overview",
+    examOverviewQuestionCount: "{count} questions",
+    examOverviewDuration: "{minutes} minutes",
     examOverviewScenario: "Scenario and application focus",
     examOverviewTypes: "Multiple question types",
     examOverviewBreaks: "Breaks after sections 1 and 2",
@@ -176,14 +188,17 @@ const TRANSLATIONS = {
     mark: "Mark",
     unmark: "Unmark",
     mockExamTitle: "PMP Mock Exam 2026",
-    mockExamIntro: "A full exam simulation with 185 questions and 240 minutes.",
+    mockExamIntro: "A full exam simulation with {count} questions and {minutes} minutes.",
     settings: "Settings",
     shuffleQuestions: "Shuffle question order",
     shuffleOptions: "Shuffle answer options",
-    enableBreaks: "Show recommended breaks after questions 60 and 120",
+    enableBreaks: "Show recommended breaks after questions {first} and {second}",
     examFormat: "Exam format",
+    examFormatQuestionCount: "{count} questions",
+    examFormatDuration: "{minutes} minutes",
     examFormatMix: "Domain mix aligned with the 2026 distribution",
     examFormatTypes: "Single, multiple, case, and exhibit",
+    examFormatGuaranteedMix: "Target mix: up to {caseCount} case and {exhibitCount} exhibit questions when available",
     startExamAction: "Start Exam",
     timeRemaining: "Time Remaining",
     progress: "Progress",
@@ -252,8 +267,8 @@ const TRANSLATIONS = {
     appTitle: "PMP Trainer 2026",
     metaDescription: "PMP Trainer 2026 - övningsfrågor och simulerat prov enligt PMP-examen från 9 juli 2026.",
     subtitle: "Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026",
-    badgeQuestions: "185 frågor",
-    badgeMinutes: "240 minuter",
+    badgeQuestions: "{count} frågor",
+    badgeMinutes: "{minutes} minuter",
     badgeScenario: "Scenariofokus",
     navHome: "Start",
     navPractice: "Övningsläge",
@@ -269,6 +284,8 @@ const TRANSLATIONS = {
     statsTasks: "Tasks",
     statsExamFormat: "Examformat",
     examOverview: "Examensupplägg",
+    examOverviewQuestionCount: "{count} frågor",
+    examOverviewDuration: "{minutes} minuter",
     examOverviewScenario: "Scenario- och tillämpningsfokus",
     examOverviewTypes: "Flera frågetyper",
     examOverviewBreaks: "Pauser efter block 1 och 2",
@@ -309,14 +326,17 @@ const TRANSLATIONS = {
     mark: "Markera",
     unmark: "Avmarkera",
     mockExamTitle: "Simulerat PMP-prov 2026",
-    mockExamIntro: "Fullständig examsimulering med 185 frågor och 240 minuter.",
+    mockExamIntro: "Fullständig examsimulering med {count} frågor och {minutes} minuter.",
     settings: "Inställningar",
     shuffleQuestions: "Blanda frågornas ordning",
     shuffleOptions: "Blanda svarsalternativ",
-    enableBreaks: "Visa rekommenderade pauser efter fråga 60 och 120",
+    enableBreaks: "Visa rekommenderade pauser efter fråga {first} och {second}",
     examFormat: "Provformat",
+    examFormatQuestionCount: "{count} frågor",
+    examFormatDuration: "{minutes} minuter",
     examFormatMix: "Domänmix enligt 2026-fördelning",
     examFormatTypes: "Single, multiple, case och exhibit",
+    examFormatGuaranteedMix: "Målmix: upp till {caseCount} case-frågor och {exhibitCount} exhibit-frågor när de finns tillgängliga",
     startExamAction: "Starta prov",
     timeRemaining: "Tid kvar",
     progress: "Framsteg",
@@ -422,6 +442,22 @@ function setLanguage(language) {
   }
 }
 
+function examVars(extra = {}) {
+  const [first = 0, second = 0] = EXAM_CONFIG.breakpoints;
+  const caseCount = EXAM_CONFIG.formatTargets?.case || 0;
+  const exhibitCount = EXAM_CONFIG.formatTargets?.exhibit || 0;
+  return {
+    count: EXAM_CONFIG.questionCount,
+    minutes: EXAM_CONFIG.durationMinutes,
+    first,
+    second,
+    caseCount,
+    exhibitCount,
+    standardCount: Math.max(0, EXAM_CONFIG.questionCount - caseCount - exhibitCount),
+    ...extra
+  };
+}
+
 function applyTranslations() {
   document.title = t("appTitle");
   const metaDescription = document.querySelector('meta[name="description"]');
@@ -430,8 +466,8 @@ function applyTranslations() {
   const textMap = {
     "#appTitle": t("appTitle"),
     ".subtitle": t("subtitle"),
-    "#badgeQuestions": t("badgeQuestions"),
-    "#badgeMinutes": t("badgeMinutes"),
+    "#badgeQuestions": t("badgeQuestions", examVars()),
+    "#badgeMinutes": t("badgeMinutes", examVars()),
     "#badgeScenario": t("badgeScenario"),
     '[data-view="home"]': t("navHome"),
     '[data-view="practice"]': t("navPractice"),
@@ -447,6 +483,8 @@ function applyTranslations() {
     "#statsTasksLabel": t("statsTasks"),
     "#statsExamFormatLabel": t("statsExamFormat"),
     "#examOverviewTitle": t("examOverview"),
+    "#examOverviewQuestionCount": t("examOverviewQuestionCount", examVars()),
+    "#examOverviewDuration": t("examOverviewDuration", examVars()),
     "#examOverviewScenario": t("examOverviewScenario"),
     "#examOverviewTypes": t("examOverviewTypes"),
     "#examOverviewBreaks": t("examOverviewBreaks"),
@@ -471,14 +509,17 @@ function applyTranslations() {
     "#practicePrevBtn": t("prev"),
     "#practiceNextBtn": t("next"),
     "#examTitle": t("mockExamTitle"),
-    "#examIntro": t("mockExamIntro"),
+    "#examIntro": t("mockExamIntro", examVars()),
     "#examSettingsTitle": t("settings"),
     "#examShuffleQuestionsLabel": t("shuffleQuestions"),
     "#examShuffleOptionsLabel": t("shuffleOptions"),
-    "#examEnableBreaksLabel": t("enableBreaks"),
+    "#examEnableBreaksLabel": t("enableBreaks", examVars()),
     "#examFormatTitle": t("examFormat"),
+    "#examFormatQuestionCount": t("examFormatQuestionCount", examVars()),
+    "#examFormatDuration": t("examFormatDuration", examVars()),
     "#examFormatMix": t("examFormatMix"),
     "#examFormatTypes": t("examFormatTypes"),
+    "#examFormatGuaranteedMix": t("examFormatGuaranteedMix", examVars()),
     "#examStartBtn": t("startExamAction"),
     "#examTimeRemainingTitle": t("timeRemaining"),
     "#examProgressTitle": t("progress"),
@@ -660,13 +701,20 @@ function normalizeQuestion(q, index) {
   if (!q || typeof q !== "object") return null;
 
   const options = normalizeOptions(q.options || []);
-  const normalizedType = normalizeQuestionType(q.type, options);
+  const caseText = normalizeTextBlock(q.caseText || q.case || q.caseSet || "");
+  const exhibitContent = normalizeExhibitContent(q.exhibitContent || q.exhibit || "");
+  const format = normalizeQuestionFormat(q.format || q.type, { caseText, exhibitContent });
   const normalizedOptions =
-    (normalizedType === "case" || normalizedType === "exhibit") && options.length === 0
+    (format === "case" || format === "exhibit") && options.length === 0
       ? []
       : options;
 
   const correctAnswers = normalizeCorrectAnswers(q.correctAnswers || [], normalizedOptions);
+  const selectionMode = finalizeSelectionMode(
+    normalizeSelectionMode(q.selectionMode || q.responseType || q.answerMode || q.type),
+    correctAnswers
+  );
+  const legacyType = format === "standard" ? selectionMode : format;
 
   return {
     id: q.id || `Q-${index + 1}`,
@@ -676,23 +724,107 @@ function normalizeQuestion(q, index) {
     tags: Array.isArray(q.tags) ? q.tags : [],
     difficulty: normalizeDifficulty(q.difficulty),
     difficultyLabel: difficultyLabelFromValue(normalizeDifficulty(q.difficulty)),
-    type: normalizedType,
+    format,
+    selectionMode,
+    type: legacyType,
     question: q.question || "",
     options: normalizedOptions,
     correctAnswers,
     explanation: q.explanation || "",
-    caseText: q.caseText || q.case || "",
-    exhibitContent: q.exhibitContent || q.exhibit || ""
+    caseText,
+    caseTitle: q.caseTitle || "",
+    caseSetId: q.caseSetId || q.caseGroupId || "",
+    exhibitTitle: q.exhibitTitle || "",
+    exhibitContent
   };
 }
 
-function normalizeQuestionType(type, options) {
-  const t = String(type || "").trim().toLowerCase();
-  if (t === "multiple") return "multiple";
-  if (t === "case") return "case";
-  if (t === "exhibit") return "exhibit";
-  if (t === "single") return "single";
-  return options.length > 1 ? "single" : "single";
+function normalizeQuestionFormat(value, { caseText = "", exhibitContent = "" } = {}) {
+  const t = String(value || "").trim().toLowerCase();
+  if (["case", "case set", "caseset"].includes(t)) return "case";
+  if (["exhibit", "exhibit item"].includes(t)) return "exhibit";
+  if (["standard", "single", "multiple", "question", "default"].includes(t)) return "standard";
+  if (caseText) return "case";
+  if (hasExhibitContent(exhibitContent)) return "exhibit";
+  return "standard";
+}
+
+function normalizeSelectionMode(value) {
+  const t = String(value || "").trim().toLowerCase();
+  if (["multiple", "multi", "multiple response", "multiple-response", "multi-select", "multiselect"].includes(t)) {
+    return "multiple";
+  }
+  if (["single", "single response", "single-response", "best answer"].includes(t)) {
+    return "single";
+  }
+  return "";
+}
+
+function finalizeSelectionMode(selectionMode, correctAnswers) {
+  if (selectionMode === "multiple") return "multiple";
+  if (selectionMode === "single") return correctAnswers.length > 1 ? "multiple" : "single";
+  return correctAnswers.length > 1 ? "multiple" : "single";
+}
+
+function normalizeTextBlock(value) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item ?? "")).join("\n");
+  }
+  if (typeof value === "object") {
+    if (Array.isArray(value.lines)) return value.lines.map((item) => String(item ?? "")).join("\n");
+    if (typeof value.text === "string") return value.text;
+    if (typeof value.body === "string") return value.body;
+  }
+  return String(value);
+}
+
+function normalizeExhibitContent(value) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value.map((item) => String(item ?? ""));
+  if (typeof value !== "object") return String(value);
+
+  if (Array.isArray(value.columns) && Array.isArray(value.rows)) {
+    return {
+      kind: "table",
+      columns: value.columns.map((item) => String(item ?? "")),
+      rows: value.rows.map((row) => (Array.isArray(row) ? row.map((cell) => String(cell ?? "")) : [String(row ?? "")])),
+      title: typeof value.title === "string" ? value.title : ""
+    };
+  }
+
+  if (Array.isArray(value.items)) {
+    return {
+      kind: "list",
+      items: value.items.map((item) => String(item ?? "")),
+      title: typeof value.title === "string" ? value.title : ""
+    };
+  }
+
+  if (Array.isArray(value.entries)) {
+    return {
+      kind: "key-value",
+      entries: value.entries
+        .filter((entry) => entry && typeof entry === "object")
+        .map((entry) => ({
+          key: String(entry.key ?? ""),
+          value: String(entry.value ?? "")
+        })),
+      title: typeof value.title === "string" ? value.title : ""
+    };
+  }
+
+  if (typeof value.text === "string" || typeof value.body === "string") {
+    return {
+      kind: "text",
+      text: typeof value.text === "string" ? value.text : value.body,
+      title: typeof value.title === "string" ? value.title : ""
+    };
+  }
+
+  return normalizeTextBlock(value);
 }
 
 function normalizeDifficulty(value) {
@@ -840,10 +972,20 @@ function getPracticeFilteredQuestions() {
     const matchesDomain = !domain || q.domain === domain;
     const matchesTask = !task || formatTaskLabel(q) === task;
     const matchesDifficulty = !difficulty || q.difficulty === difficulty;
-    const matchesType = !type || q.type === type;
+    const matchesType = !type || matchesQuestionTypeFilter(q, type);
     const matchesTag = !tag || (q.tags || []).includes(tag);
     return matchesDomain && matchesTask && matchesDifficulty && matchesType && matchesTag;
   });
+}
+
+function matchesQuestionTypeFilter(question, filterValue) {
+  if (filterValue === "single" || filterValue === "multiple") {
+    return question.selectionMode === filterValue;
+  }
+  if (filterValue === "case" || filterValue === "exhibit") {
+    return question.format === filterValue;
+  }
+  return true;
 }
 
 function updatePracticePoolInfo() {
@@ -936,7 +1078,7 @@ function renderPractice() {
 
   setText(els.practiceMetaDomain, question.domain);
   setText(els.practiceMetaTask, formatTaskLabel(question));
-  setText(els.practiceMetaType, questionTypeLabel(question.type));
+  setText(els.practiceMetaType, questionTypeLabel(question));
   setText(els.practiceMetaDifficulty, question.difficultyLabel);
 
   renderCaseAndExhibit(
@@ -948,7 +1090,7 @@ function renderPractice() {
   );
 
   setText(els.practiceQuestionTitle, t("progressQuestion", { current: session.currentIndex + 1, total }));
-  setText(els.practiceQuestionInstruction, instructionText(question.type));
+  setText(els.practiceQuestionInstruction, instructionText(question));
   setHtml(els.practiceQuestionText, escapeHtml(question.question).replace(/\n/g, "<br>"));
 
   renderOptions({
@@ -1008,16 +1150,16 @@ function startExamSession() {
     return;
   }
 
-  const selected = buildExamQuestionSet(source, 185);
+  const selected = buildExamQuestionSet(source, EXAM_CONFIG.questionCount);
   const shuffleQuestions = !!els.examShuffleQuestions?.checked;
   const shuffleOptions = !!els.examShuffleOptions?.checked;
 
-  const questions = shuffleQuestions ? shuffle(selected) : selected;
+  const questions = arrangeExamQuestionOrder(selected, shuffleQuestions);
 
   state.examSession = createSession({
     modeKey: "exam",
     questions,
-    totalSeconds: 240 * 60,
+    totalSeconds: EXAM_CONFIG.durationMinutes * 60,
     shuffleOptions
   });
 
@@ -1035,30 +1177,232 @@ function buildExamQuestionSet(source, count) {
   const shuffled = shuffle([...source]);
   if (shuffled.length <= count) return shuffled;
 
-  const target = {
-    people: Math.round(count * 0.33),
-    process: Math.round(count * 0.41),
-    business: count - Math.round(count * 0.33) - Math.round(count * 0.41)
-  };
+  const domainTargets = calculateExamDomainTargets(count);
+  const formatTargets = resolveExamFormatTargets(shuffled, count);
+  const selected = [];
+  const usedIds = new Set();
+  const currentDomainCounts = { people: 0, process: 0, business: 0 };
 
-  const buckets = {
-    people: shuffled.filter((q) => q.domain.toLowerCase() === "people"),
-    process: shuffled.filter((q) => q.domain.toLowerCase() === "process"),
-    business: shuffled.filter((q) => q.domain.toLowerCase().includes("business"))
-  };
+  addQuestionsToSelection(
+    selectCaseQuestionsForExam(shuffled, formatTargets.case, domainTargets, currentDomainCounts, usedIds),
+    selected,
+    usedIds,
+    currentDomainCounts
+  );
 
-  let result = [];
-  result = result.concat(shuffle(buckets.people).slice(0, target.people));
-  result = result.concat(shuffle(buckets.process).slice(0, target.process));
-  result = result.concat(shuffle(buckets.business).slice(0, target.business));
+  addQuestionsToSelection(
+    selectQuestionsByDomainTarget(
+      shuffled.filter((q) => q.format === "exhibit" && !usedIds.has(q.id)),
+      formatTargets.exhibit,
+      domainTargets,
+      currentDomainCounts,
+      usedIds
+    ),
+    selected,
+    usedIds,
+    currentDomainCounts
+  );
 
-  if (result.length < count) {
-    const used = new Set(result.map((q) => q.id));
-    const fillers = shuffled.filter((q) => !used.has(q.id));
-    result = result.concat(fillers.slice(0, count - result.length));
+  addQuestionsToSelection(
+    selectQuestionsByDomainTarget(
+      shuffled.filter((q) => q.format === "standard" && !usedIds.has(q.id)),
+      Math.max(0, count - selected.length),
+      domainTargets,
+      currentDomainCounts,
+      usedIds
+    ),
+    selected,
+    usedIds,
+    currentDomainCounts
+  );
+
+  if (selected.length < count) {
+    addQuestionsToSelection(
+      shuffle(shuffled.filter((q) => !usedIds.has(q.id))).slice(0, count - selected.length),
+      selected,
+      usedIds,
+      currentDomainCounts
+    );
   }
 
-  return shuffle(result).slice(0, count);
+  return selected.slice(0, count);
+}
+
+function calculateExamDomainTargets(count) {
+  const people = Math.round(count * 0.33);
+  const process = Math.round(count * 0.41);
+  return {
+    people,
+    process,
+    business: count - people - process
+  };
+}
+
+function resolveExamFormatTargets(source, count) {
+  const available = source.reduce((acc, question) => {
+    const format = question.format || "standard";
+    acc[format] = (acc[format] || 0) + 1;
+    return acc;
+  }, { standard: 0, case: 0, exhibit: 0 });
+
+  const caseTarget = Math.min(EXAM_CONFIG.formatTargets?.case || 0, available.case || 0, count);
+  const exhibitTarget = Math.min(EXAM_CONFIG.formatTargets?.exhibit || 0, available.exhibit || 0, Math.max(0, count - caseTarget));
+
+  return {
+    case: caseTarget,
+    exhibit: exhibitTarget,
+    standard: Math.max(0, count - caseTarget - exhibitTarget)
+  };
+}
+
+function addQuestionsToSelection(questions, selected, usedIds, currentDomainCounts) {
+  for (const question of questions || []) {
+    if (!question || usedIds.has(question.id)) continue;
+    selected.push(question);
+    usedIds.add(question.id);
+
+    const domainKey = getQuestionDomainKey(question);
+    if (domainKey in currentDomainCounts) {
+      currentDomainCounts[domainKey] += 1;
+    }
+  }
+}
+
+function getQuestionDomainKey(question) {
+  const domain = String(question?.domain || "").toLowerCase();
+  if (domain === "people") return "people";
+  if (domain === "process") return "process";
+  if (domain.includes("business")) return "business";
+  return "other";
+}
+
+function selectQuestionsByDomainTarget(pool, count, domainTargets, currentDomainCounts, usedIds) {
+  if (count <= 0) return [];
+
+  const available = shuffle((pool || []).filter((question) => !usedIds.has(question.id)));
+  if (!available.length) return [];
+
+  const buckets = { people: [], process: [], business: [], other: [] };
+  for (const question of available) {
+    buckets[getQuestionDomainKey(question)].push(question);
+  }
+
+  const selected = [];
+  let remaining = count;
+
+  for (const domainKey of ["people", "process", "business"]) {
+    const deficit = Math.max(0, (domainTargets[domainKey] || 0) - (currentDomainCounts[domainKey] || 0));
+    const take = Math.min(deficit, remaining, buckets[domainKey].length);
+    if (take > 0) {
+      selected.push(...buckets[domainKey].splice(0, take));
+      remaining -= take;
+    }
+  }
+
+  if (remaining > 0) {
+    const fillers = shuffle([
+      ...buckets.people,
+      ...buckets.process,
+      ...buckets.business,
+      ...buckets.other
+    ]).slice(0, remaining);
+    selected.push(...fillers);
+  }
+
+  return selected.slice(0, count);
+}
+
+function selectCaseQuestionsForExam(source, count, domainTargets, currentDomainCounts, usedIds) {
+  if (count <= 0) return [];
+
+  const pool = source.filter((question) => question.format === "case" && !usedIds.has(question.id));
+  if (!pool.length) return [];
+
+  const groups = buildCaseQuestionGroups(pool);
+  const selected = [];
+  const workingDomainCounts = { ...currentDomainCounts };
+  let remaining = count;
+
+  while (remaining > 0 && groups.length) {
+    const ranked = groups
+      .filter((group) => group.questions.length <= remaining)
+      .map((group) => ({
+        group,
+        score: scoreCaseGroupForExam(group, domainTargets, workingDomainCounts)
+      }))
+      .sort((a, b) => b.score - a.score);
+
+    if (!ranked.length) break;
+
+    const chosen = ranked[0].group;
+    selected.push(...chosen.questions);
+    remaining -= chosen.questions.length;
+
+    const domainKey = chosen.primaryDomain;
+    if (domainKey in workingDomainCounts) {
+      workingDomainCounts[domainKey] += chosen.questions.length;
+    }
+
+    const groupIndex = groups.findIndex((group) => group.key === chosen.key);
+    if (groupIndex >= 0) groups.splice(groupIndex, 1);
+  }
+
+  if (remaining > 0) {
+    selected.push(
+      ...selectQuestionsByDomainTarget(
+        groups.flatMap((group) => group.questions),
+        remaining,
+        domainTargets,
+        workingDomainCounts,
+        usedIds
+      )
+    );
+  }
+
+  return selected.slice(0, count);
+}
+
+function buildCaseQuestionGroups(questions) {
+  const groups = new Map();
+
+  for (const question of questions) {
+    const key = question.caseSetId || question.id;
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key).push(question);
+  }
+
+  return shuffle(Array.from(groups.entries()).map(([key, groupQuestions]) => ({
+    key,
+    questions: groupQuestions,
+    primaryDomain: getQuestionDomainKey(groupQuestions[0])
+  })));
+}
+
+function scoreCaseGroupForExam(group, domainTargets, currentDomainCounts) {
+  const domainKey = group.primaryDomain;
+  const deficit = Math.max(0, (domainTargets[domainKey] || 0) - (currentDomainCounts[domainKey] || 0));
+  return (Math.min(group.questions.length, deficit) * 10) + Math.random();
+}
+
+function arrangeExamQuestionOrder(questions, shuffleQuestions) {
+  const blocks = [];
+  const seenCaseSets = new Set();
+
+  for (const question of questions) {
+    if (question.format === "case") {
+      const key = question.caseSetId || question.id;
+      if (seenCaseSets.has(key)) continue;
+      seenCaseSets.add(key);
+      blocks.push(questions.filter((item) => item.format === "case" && (item.caseSetId || item.id) === key));
+    } else {
+      blocks.push([question]);
+    }
+  }
+
+  const orderedBlocks = shuffleQuestions ? shuffle(blocks) : blocks;
+  return orderedBlocks.flat();
 }
 
 function startExamTimer() {
@@ -1110,7 +1454,7 @@ function renderExam() {
 
   setText(els.examMetaDomain, question.domain);
   setText(els.examMetaTask, formatTaskLabel(question));
-  setText(els.examMetaType, questionTypeLabel(question.type));
+  setText(els.examMetaType, questionTypeLabel(question));
   setText(els.examMetaDifficulty, question.difficultyLabel);
 
   renderCaseAndExhibit(
@@ -1122,7 +1466,7 @@ function renderExam() {
   );
 
   setText(els.examQuestionTitle, t("progressQuestion", { current: session.currentIndex + 1, total }));
-  setText(els.examQuestionInstruction, instructionText(question.type));
+  setText(els.examQuestionInstruction, instructionText(question));
   setHtml(els.examQuestionText, escapeHtml(question.question).replace(/\n/g, "<br>"));
 
   renderOptions({
@@ -1157,15 +1501,17 @@ function maybeShowBreakNotice(session) {
   }
 
   const currentHumanIndex = session.currentIndex + 1;
-  const breakPoints = [61, 121];
 
-  if (breakPoints.includes(currentHumanIndex) && !state.breakShownAt.has(currentHumanIndex)) {
-    state.breakShownAt.add(currentHumanIndex);
-    if (els.examBreakText) {
-      const previousBlockEnd = currentHumanIndex - 1;
-      els.examBreakText.textContent = t("breakNotice", { question: previousBlockEnd });
+  for (const blockEnd of EXAM_CONFIG.breakpoints) {
+    const triggerIndex = Math.min(blockEnd + 1, session.questions.length);
+    if (currentHumanIndex === triggerIndex && !state.breakShownAt.has(blockEnd)) {
+      state.breakShownAt.add(blockEnd);
+      if (els.examBreakText) {
+        els.examBreakText.textContent = t("breakNotice", { question: blockEnd });
+      }
+      els.examBreakNotice?.classList.remove("hidden");
+      return;
     }
-    els.examBreakNotice?.classList.remove("hidden");
   }
 }
 
@@ -1203,7 +1549,7 @@ function finishExamSession() {
 function updateSessionAnswer(session, question, value, checked) {
   let answers = session.answers[question.id] || [];
 
-  if (question.type === "multiple") {
+  if (question.selectionMode === "multiple") {
     const set = new Set(answers);
     if (checked) set.add(value);
     else set.delete(value);
@@ -1234,7 +1580,7 @@ function renderOptions({ container, question, selectedAnswers, disabled, onChang
     label.className = "option-item";
 
     const input = document.createElement("input");
-    input.type = question.type === "multiple" ? "checkbox" : "radio";
+    input.type = question.selectionMode === "multiple" ? "checkbox" : "radio";
     input.name = `question-${question.id}`;
     input.value = option.id;
     input.checked = selectedAnswers.includes(option.id);
@@ -1317,7 +1663,7 @@ function buildResult(session) {
   }));
 
   return {
-    mode: session.mode,
+    mode: session.modeKey,
     total: details.length,
     correctCount,
     incorrectCount,
@@ -1428,7 +1774,7 @@ function renderReviewQuestions() {
 
     clone.querySelector(".review-domain").textContent = item.question.domain;
     clone.querySelector(".review-task").textContent = formatTaskLabel(item.question);
-    clone.querySelector(".review-type").textContent = questionTypeLabel(item.question.type);
+    clone.querySelector(".review-type").textContent = questionTypeLabel(item.question);
     clone.querySelector(".review-difficulty").textContent = item.question.difficultyLabel;
 
     const statusEl = clone.querySelector(".review-status");
@@ -1467,29 +1813,117 @@ function formatAnswerForDisplay(question, answerIds) {
 
 function renderCaseAndExhibit(question, caseBlock, caseText, exhibitBlock, exhibitContent) {
   const hasCase = !!question.caseText;
-  const hasExhibit = !!question.exhibitContent;
+  const hasExhibit = hasExhibitContent(question.exhibitContent);
 
   if (caseBlock) caseBlock.classList.toggle("hidden", !hasCase);
-  if (caseText) caseText.innerHTML = hasCase ? escapeHtml(question.caseText).replace(/\n/g, "<br>") : "";
+  if (caseText) {
+    caseText.innerHTML = hasCase ? renderRichTextBlock(question.caseText, question.caseTitle) : "";
+  }
 
   if (exhibitBlock) exhibitBlock.classList.toggle("hidden", !hasExhibit);
   if (exhibitContent) {
-    exhibitContent.innerHTML = hasExhibit ? escapeHtml(question.exhibitContent).replace(/\n/g, "<br>") : "";
+    exhibitContent.innerHTML = hasExhibit ? renderExhibitContent(question.exhibitContent, question.exhibitTitle) : "";
   }
 }
 
-function questionTypeLabel(type) {
-  if (type === "multiple") return t("typeLabelMultiple");
-  if (type === "case") return t("typeLabelCase");
-  if (type === "exhibit") return t("typeLabelExhibit");
+function renderRichTextBlock(text, title = "") {
+  const parts = [];
+  if (title) {
+    parts.push(`<div class="stimulus-title">${escapeHtml(title)}</div>`);
+  }
+  parts.push(escapeHtml(String(text || "")).replace(/\n\n/g, "<br><br>").replace(/\n/g, "<br>"));
+  return parts.join("");
+}
+
+function renderExhibitContent(content, fallbackTitle = "") {
+  if (!hasExhibitContent(content)) return "";
+
+  if (typeof content === "string") {
+    return renderRichTextBlock(content, fallbackTitle);
+  }
+
+  if (Array.isArray(content)) {
+    const items = content.map((item) => `<li>${escapeHtml(String(item || ""))}</li>`).join("");
+    const titleHtml = fallbackTitle ? `<div class="stimulus-title">${escapeHtml(fallbackTitle)}</div>` : "";
+    return `${titleHtml}<ul class="rich-list">${items}</ul>`;
+  }
+
+  if (content && typeof content === "object") {
+    const title = content.title || fallbackTitle || "";
+    const titleHtml = title ? `<div class="stimulus-title">${escapeHtml(title)}</div>` : "";
+
+    if (content.kind === "table") {
+      const headerHtml = (content.columns || []).map((col) => `<th>${escapeHtml(String(col || ""))}</th>`).join("");
+      const rowsHtml = (content.rows || [])
+        .map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(String(cell || ""))}</td>`).join("")}</tr>`)
+        .join("");
+      return `${titleHtml}<div class="rich-table-wrap"><table class="rich-table"><thead><tr>${headerHtml}</tr></thead><tbody>${rowsHtml}</tbody></table></div>`;
+    }
+
+    if (content.kind === "list") {
+      const items = (content.items || []).map((item) => `<li>${escapeHtml(String(item || ""))}</li>`).join("");
+      return `${titleHtml}<ul class="rich-list">${items}</ul>`;
+    }
+
+    if (content.kind === "key-value") {
+      const entries = (content.entries || [])
+        .map((entry) => `<div class="rich-kv-row"><dt>${escapeHtml(String(entry.key || ""))}</dt><dd>${escapeHtml(String(entry.value || ""))}</dd></div>`)
+        .join("");
+      return `${titleHtml}<dl class="rich-kv">${entries}</dl>`;
+    }
+
+    if (content.kind === "text") {
+      return renderRichTextBlock(content.text || "", title);
+    }
+  }
+
+  return renderRichTextBlock(normalizeTextBlock(content), fallbackTitle);
+}
+
+function hasExhibitContent(content) {
+  if (!content) return false;
+  if (typeof content === "string") return !!content.trim();
+  if (Array.isArray(content)) return content.length > 0;
+  if (typeof content === "object") {
+    if (Array.isArray(content.rows)) return content.rows.length > 0;
+    if (Array.isArray(content.items)) return content.items.length > 0;
+    if (Array.isArray(content.entries)) return content.entries.length > 0;
+    if (typeof content.text === "string") return !!content.text.trim();
+    if (typeof content.body === "string") return !!content.body.trim();
+  }
+  return true;
+}
+
+function questionTypeLabel(questionOrType, maybeSelectionMode = "") {
+  const question = typeof questionOrType === "object" && questionOrType ? questionOrType : null;
+  const format = question
+    ? question.format || (question.type === "case" || question.type === "exhibit" ? question.type : "standard")
+    : (questionOrType === "case" || questionOrType === "exhibit" ? questionOrType : "standard");
+  const selectionMode = question
+    ? question.selectionMode || (question.type === "multiple" ? "multiple" : "single")
+    : maybeSelectionMode || (questionOrType === "multiple" ? "multiple" : "single");
+
+  if (format === "case") {
+    return selectionMode === "multiple" ? `${t("typeLabelCase")} • ${t("typeLabelMultiple")}` : `${t("typeLabelCase")} • ${t("typeLabelSingle")}`;
+  }
+  if (format === "exhibit") {
+    return selectionMode === "multiple" ? `${t("typeLabelExhibit")} • ${t("typeLabelMultiple")}` : `${t("typeLabelExhibit")} • ${t("typeLabelSingle")}`;
+  }
+  if (selectionMode === "multiple") return t("typeLabelMultiple");
   return t("typeLabelSingle");
 }
 
-function instructionText(type) {
-  if (type === "multiple") return t("chooseAll");
+function instructionText(questionOrType) {
+  const selectionMode =
+    typeof questionOrType === "object" && questionOrType
+      ? questionOrType.selectionMode || (questionOrType.type === "multiple" ? "multiple" : "single")
+      : questionOrType === "multiple"
+        ? "multiple"
+        : "single";
+
+  if (selectionMode === "multiple") return t("chooseAll");
   return t("chooseBest");
 }
-
 function updateButtonState(button, disabled) {
   if (button) button.disabled = !!disabled;
 }
