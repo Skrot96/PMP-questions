@@ -119,8 +119,8 @@ const TRANSLATIONS = {
     appTitle: "PMP Trainer 2026",
     metaDescription: "PMP Trainer 2026 - practice questions and a simulated exam aligned with the PMP exam from July 9, 2026.",
     subtitle: "Practice questions and a simulated exam aligned with the new PMP exam from July 9, 2026",
-    badgeQuestions: "180 questions",
-    badgeMinutes: "230 minutes",
+    badgeQuestions: "185 questions",
+    badgeMinutes: "240 minutes",
     badgeScenario: "Scenario-focused",
     navHome: "Home",
     navPractice: "Practice",
@@ -176,7 +176,7 @@ const TRANSLATIONS = {
     mark: "Mark",
     unmark: "Unmark",
     mockExamTitle: "PMP Mock Exam 2026",
-    mockExamIntro: "A full exam simulation with 180 questions and 230 minutes.",
+    mockExamIntro: "A full exam simulation with 185 questions and 240 minutes.",
     settings: "Settings",
     shuffleQuestions: "Shuffle question order",
     shuffleOptions: "Shuffle answer options",
@@ -252,8 +252,8 @@ const TRANSLATIONS = {
     appTitle: "PMP Trainer 2026",
     metaDescription: "PMP Trainer 2026 - övningsfrågor och simulerat prov enligt PMP-examen från 9 juli 2026.",
     subtitle: "Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026",
-    badgeQuestions: "180 frågor",
-    badgeMinutes: "230 minuter",
+    badgeQuestions: "185 frågor",
+    badgeMinutes: "240 minuter",
     badgeScenario: "Scenariofokus",
     navHome: "Start",
     navPractice: "Övningsläge",
@@ -309,7 +309,7 @@ const TRANSLATIONS = {
     mark: "Markera",
     unmark: "Avmarkera",
     mockExamTitle: "Simulerat PMP-prov 2026",
-    mockExamIntro: "Fullständig examsimulering med 180 frågor och 230 minuter.",
+    mockExamIntro: "Fullständig examsimulering med 185 frågor och 240 minuter.",
     settings: "Inställningar",
     shuffleQuestions: "Blanda frågornas ordning",
     shuffleOptions: "Blanda svarsalternativ",
@@ -1008,7 +1008,7 @@ function startExamSession() {
     return;
   }
 
-  const selected = buildExamQuestionSet(source, 180);
+  const selected = buildExamQuestionSet(source, 185);
   const shuffleQuestions = !!els.examShuffleQuestions?.checked;
   const shuffleOptions = !!els.examShuffleOptions?.checked;
 
@@ -1017,7 +1017,7 @@ function startExamSession() {
   state.examSession = createSession({
     modeKey: "exam",
     questions,
-    totalSeconds: 230 * 60,
+    totalSeconds: 240 * 60,
     shuffleOptions
   });
 
