@@ -21509,5 +21509,285 @@
       2
     ],
     "explanation": "The exhibit shows that several non-code readiness dimensions remain incomplete. The best response is to align on common readiness criteria and use them consistently in release decisions. Treating coding as sufficient is too narrow. Proceeding because most visible build work is complete would ignore unresolved readiness gaps."
+  },
+  {
+    "id": "PR3-W501",
+    "domain": "Process",
+    "taskCode": "PR3",
+    "task": "Assess and manage risks",
+    "tags": [
+      "risk-management",
+      "where-can-you-find",
+      "risk-register",
+      "predictive",
+      "documentation",
+      "risk-response"
+    ],
+    "difficulty": "Medium",
+    "question": "Where can you find the owner, response strategy, probability, impact, and current status for an identified project risk?",
+    "options": [
+      "In the risk register, because it records individual risks and the information needed to analyze, monitor, and respond to them.",
+      "In the issue log, because all uncertain future events are managed as current issues once they are identified.",
+      "In the stakeholder register, because risk ownership is always based on stakeholder influence and interest.",
+      "In the lessons learned register, because risk response details should only be documented after the risk has occurred."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "The best answer is the risk register. It is used to record individual project risks, including information such as ownership, probability, impact, response planning, and status. The issue log is for current problems or events that have already occurred. The stakeholder register supports stakeholder analysis, not risk tracking. The lessons learned register captures learning, but it is not the primary place to manage active risk-response information.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR8-W502",
+    "domain": "Process",
+    "taskCode": "PR8",
+    "task": "Plan and manage scope",
+    "tags": [
+      "scope-management",
+      "where-can-you-find",
+      "requirements-traceability-matrix",
+      "requirements",
+      "predictive",
+      "validation"
+    ],
+    "difficulty": "Medium",
+    "question": "Where can you find how each requirement links to business objectives, deliverables, test cases, and acceptance evidence?",
+    "options": [
+      "In the issue log, because it shows which requirements have created delivery problems.",
+      "In the requirements traceability matrix, because it connects requirements to their origin, objectives, deliverables, and verification evidence.",
+      "In the change log, because it lists all requirements that may be discussed by the change control board.",
+      "In the communications management plan, because it defines who should receive requirements updates."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "The best answer is the requirements traceability matrix. It is used to trace requirements from their source through delivery and verification, helping confirm that each requirement supports a business need and is tested or accepted appropriately. The issue log, change log, and communications management plan may reference requirements, but they do not provide the primary end-to-end traceability structure.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR4-W503",
+    "domain": "Process",
+    "taskCode": "PR4",
+    "task": "Engage stakeholders",
+    "tags": [
+      "stakeholder-engagement",
+      "where-can-you-find",
+      "stakeholder-register",
+      "stakeholder-analysis",
+      "influence",
+      "expectations"
+    ],
+    "difficulty": "Easy",
+    "question": "Where can you find documented information about stakeholders' roles, interests, expectations, influence, and engagement-related characteristics?",
+    "options": [
+      "In the stakeholder register, because it records key information used to understand and analyze project stakeholders.",
+      "In the cost baseline, because stakeholder expectations are primarily managed through approved funding limits.",
+      "In the procurement strategy, because all stakeholder information is controlled through supplier relationships.",
+      "In the schedule baseline, because stakeholder influence is determined by activity sequencing."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "The best answer is the stakeholder register. It captures information used to identify, analyze, and plan engagement with stakeholders, such as roles, expectations, influence, and relevant classification information. The cost baseline, procurement strategy, and schedule baseline may affect stakeholders, but they are not the primary source for stakeholder analysis data.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR2-W504",
+    "domain": "Process",
+    "taskCode": "PR2",
+    "task": "Manage communications",
+    "tags": [
+      "communications",
+      "where-can-you-find",
+      "communications-management-plan",
+      "stakeholder-needs",
+      "cadence",
+      "reporting"
+    ],
+    "difficulty": "Medium",
+    "question": "Where can you find the planned communication methods, formats, frequency, responsible senders, and stakeholder information needs for the project?",
+    "options": [
+      "In the communications management plan, because it defines how project information will be created, distributed, stored, and managed for stakeholders.",
+      "In the work breakdown structure, because it defines all communication channels required for each work package.",
+      "In the risk report, because communication timing is mainly determined by risk severity.",
+      "In the requirements documentation, because communication preferences are product requirements."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "The best answer is the communications management plan. It defines how project communications will be planned and carried out, including audience needs, format, cadence, responsibilities, and methods. The WBS organizes project scope, the risk report summarizes risk information, and requirements documentation describes product or project requirements rather than the communication approach itself.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR10-W505",
+    "domain": "Process",
+    "taskCode": "PR10",
+    "task": "Manage project changes, issues, status, and closure activities",
+    "tags": [
+      "change-management",
+      "where-can-you-find",
+      "change-log",
+      "integrated-change-control",
+      "status",
+      "documentation"
+    ],
+    "difficulty": "Medium",
+    "question": "Where can you find the status and disposition of submitted change requests, including whether each request was approved, rejected, deferred, or still under review?",
+    "options": [
+      "In the project charter, because it records all detailed decisions made after project authorization.",
+      "In the change log, because it tracks change requests and their current status or decision outcome.",
+      "In the resource calendar, because approved changes are primarily reflected in team availability.",
+      "In the quality report, because all change requests originate from quality defects."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "The best answer is the change log. It is used to track change requests and their status or disposition as they move through the change control process. The project charter authorizes the project but does not track all later changes. Resource calendars and quality reports may be affected by changes, but they are not the primary place to find change-request decisions.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR8-W506",
+    "domain": "Process",
+    "taskCode": "PR8",
+    "task": "Plan and manage scope",
+    "tags": [
+      "scope-management",
+      "where-can-you-find",
+      "project-scope-statement",
+      "scope-baseline",
+      "acceptance-criteria",
+      "exclusions"
+    ],
+    "difficulty": "Medium",
+    "question": "Where can you find the detailed description of project and product scope, major deliverables, acceptance criteria, assumptions, constraints, and explicit exclusions?",
+    "options": [
+      "In the project scope statement, because it defines the detailed scope boundaries and acceptance basis for the project.",
+      "In the stakeholder engagement plan, because stakeholders decide scope informally throughout the project.",
+      "In the team charter, because it defines the product deliverables and scope exclusions for the customer.",
+      "In the lessons learned register, because the final scope is only known after delivery is complete."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "The best answer is the project scope statement. It provides the detailed scope description and clarifies what is included, what is excluded, and how deliverables will be accepted. The stakeholder engagement plan and team charter serve different purposes. Lessons learned are useful for improvement but are not the primary source for defining project scope boundaries.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR10-P601",
+    "domain": "Process",
+    "taskCode": "PR10",
+    "task": "Manage project changes, issues, status, and closure activities",
+    "tags": [
+      "process-groups",
+      "in-what-phase",
+      "initiating",
+      "project-charter",
+      "stakeholder-identification",
+      "predictive"
+    ],
+    "difficulty": "Easy",
+    "question": "In what project management process group are the project charter developed and the initial stakeholders identified?",
+    "options": [
+      "Initiating",
+      "Planning",
+      "Executing",
+      "Closing"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "The best answer is Initiating. The project charter is developed to formally authorize the project, and initial stakeholder identification also occurs early so the project can begin with a clear understanding of key parties. Planning comes after authorization and develops the detailed approach. Executing performs the work, and Closing finalizes the project or phase.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR9-P602",
+    "domain": "Process",
+    "taskCode": "PR9",
+    "task": "Integrate project planning and delivery activities",
+    "tags": [
+      "process-groups",
+      "in-what-phase",
+      "planning",
+      "baselines",
+      "management-plans",
+      "predictive"
+    ],
+    "difficulty": "Easy",
+    "question": "In what project management process group are the scope, schedule, and cost baselines developed along with the management plans that guide project execution and control?",
+    "options": [
+      "Initiating",
+      "Planning",
+      "Executing",
+      "Monitoring and Controlling"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "The best answer is Planning. The project management plan and key baselines are developed during planning so the team has an approved basis for execution and control. Initiating authorizes the project. Executing performs the work. Monitoring and Controlling compares performance against the plan and manages variances and changes.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR7-P603",
+    "domain": "Process",
+    "taskCode": "PR7",
+    "task": "Plan and manage quality of products and deliverables",
+    "tags": [
+      "process-groups",
+      "in-what-phase",
+      "executing",
+      "deliverables",
+      "quality-management",
+      "team-management"
+    ],
+    "difficulty": "Easy",
+    "question": "In what project management process group is most of the project work performed to create deliverables, manage the team, and carry out the approved project management plan?",
+    "options": [
+      "Planning",
+      "Executing",
+      "Monitoring and Controlling",
+      "Closing"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "The best answer is Executing. This is where the team performs the work defined in the project management plan, creates deliverables, manages resources, and implements planned activities. Planning defines the approach, Monitoring and Controlling tracks and regulates performance, and Closing finalizes the project or phase.",
+    "format": "standard",
+    "selectionMode": "single"
+  },
+  {
+    "id": "PR10-P604",
+    "domain": "Process",
+    "taskCode": "PR10",
+    "task": "Manage project changes, issues, status, and closure activities",
+    "tags": [
+      "process-groups",
+      "in-what-phase",
+      "monitoring-and-controlling",
+      "integrated-change-control",
+      "performance-measurement",
+      "status"
+    ],
+    "difficulty": "Medium",
+    "question": "In what project management process group are actual results compared with the plan, variances analyzed, and change requests reviewed through integrated change control?",
+    "options": [
+      "Initiating",
+      "Planning",
+      "Executing",
+      "Monitoring and Controlling"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "The best answer is Monitoring and Controlling. This process group focuses on tracking, reviewing, and regulating project progress and performance, including analyzing variances and managing change requests through integrated change control. Initiating authorizes the project, Planning establishes the plan, and Executing performs the planned work.",
+    "format": "standard",
+    "selectionMode": "single"
   }
 ]
