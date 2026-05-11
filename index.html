@@ -6,10 +6,10 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   />
-  <title>PMP Trainer 2026</title>
+  <title>PMP Trainer</title>
   <meta
     name="description"
-    content="PMP Trainer 2026 - övningsfrågor och simulerat prov enligt PMP-examen från 9 juli 2026."
+    content="CANEA PMP Trainer"
   />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -24,16 +24,8 @@
         <div class="brand-title-group">
           <img src="CANEA-Logo-2021-RGB.png" alt="CANEA" class="brand-logo" />
           <div class="brand-copy">
-            <h1 id="appTitle">PMP Trainer 2026</h1>
-            <p class="subtitle">
-              Övningsfrågor och simulerat prov enligt den nya PMP-examen från 9 juli 2026
-            </p>
+            <h1 id="appTitle">PMP Trainer</h1>
           </div>
-        </div>
-        <div class="header-badges">
-          <span class="badge" id="badgeQuestions">185 questions</span>
-          <span class="badge" id="badgeMinutes">240 minutes</span>
-          <span class="badge" id="badgeScenario">Scenario-focused</span>
         </div>
       </div>
     </header>
@@ -54,7 +46,7 @@
         <div class="hero-card card">
           <div class="hero-grid">
             <div>
-              <h2 id="homeTitle">Practice systematically for PMP 2026</h2>
+              <h2 id="homeTitle">Practice systematically for the PMP-exam</h2>
               <p id="homeIntro">
                 Choose between targeted topic practice and a full exam simulation.
                 Questions are organized by domain, task, difficulty, and question type.
@@ -167,16 +159,6 @@
             </div>
 
             <div class="field">
-              <label for="practiceDifficulty">Difficulty</label>
-              <select id="practiceDifficulty">
-                <option value="">All levels</option>
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-              </select>
-            </div>
-
-            <div class="field">
               <label for="practiceQuestionType">Question type</label>
               <select id="practiceQuestionType">
                 <option value="">All types</option>
@@ -184,13 +166,6 @@
                 <option value="multiple">Multiple response</option>
                 <option value="case">Case set</option>
                 <option value="exhibit">Exhibit</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="practiceTag">Tag</label>
-              <select id="practiceTag">
-                <option value="">All tags</option>
               </select>
             </div>
 
@@ -297,7 +272,7 @@
       <section id="view-exam" class="view">
         <div class="section-header">
           <div>
-            <h2 id="examTitle">PMP Mock Exam 2026</h2>
+            <h2 id="examTitle">PMP Mock Exam</h2>
             <p id="examIntro" class="muted">
               A full exam simulation with 185 questions and 240 minutes.
             </p>
@@ -509,24 +484,6 @@
           <p id="aboutP1">
             This application is built to provide structured preparation for the PMP exam using the 2026 format. The questions are practice questions and are not official PMI questions.
           </p>
-
-          <h3 id="aboutFilesTitle">Project Files</h3>
-          <ul>
-            <li id="aboutFileIndex"><code>index.html</code> – interface and structure</li>
-            <li id="aboutFileStyles"><code>styles.css</code> – layout and visual design</li>
-            <li id="aboutFileApp"><code>app.js</code> – logic for questions, exams, timer, and results</li>
-            <li id="aboutFileData"><code>data/questions.json</code> – question bank</li>
-          </ul>
-
-          <h3 id="aboutUseTitle">How to Use the Program</h3>
-          <ol>
-            <li id="aboutStep1">Place all files in the same project folder.</li>
-            <li id="aboutStep2">Put <code>questions.json</code> in the <code>data</code> subfolder.</li>
-            <li id="aboutStep3">Open <code>index.html</code> in a web browser.</li>
-            <li>
-              If the browser blocks local JSON loading, run the project through a simple local server.
-            </li>
-          </ol>
 
           <h3 id="aboutNoteTitle">Note</h3>
           <p id="aboutNoteText">
